@@ -15,6 +15,13 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "@chakra-ui/gatsby-plugin": "^3.0.6",
+    "@chakra-ui/icons": "^2.0.11",
+    "@chakra-ui/react": "^2.3.5",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "formik": "^2.2.9",
+    "framer-motion": "^7.5.2",
     "gatsby": "^4.24.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
