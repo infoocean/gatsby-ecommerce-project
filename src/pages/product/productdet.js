@@ -6,12 +6,13 @@ import {
   Heading,
   Image,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Radio,
+  RadioGroup,
   SimpleGrid,
   Stack,
   Tab,
@@ -29,7 +30,9 @@ function Productdet() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
+      {/*header component*/}
       <Header />
+      {/*product det component*/}
       <Container maxW={"5xl"} py={12}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
           <Stack spacing={4}>
@@ -106,6 +109,7 @@ function Productdet() {
           </Flex>
         </SimpleGrid>
       </Container>
+      {/*my model component*/}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -119,10 +123,30 @@ function Productdet() {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <p>one!</p>
+                <Stack>
+                  <RadioGroup>
+                    <Text fontSize="1xl">Front Waist Height</Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio value="1">12</Radio>
+                      <Radio value="2">13</Radio>
+                      <Radio value="3">14</Radio>
+                      <Radio value="4">15</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </Stack>
               </TabPanel>
               <TabPanel>
-                <p>two!</p>
+                <Stack>
+                  <RadioGroup>
+                    <Text fontSize="1xl">U-rise</Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio value="1">12</Radio>
+                      <Radio value="2">13</Radio>
+                      <Radio value="3">14</Radio>
+                      <Radio value="4">15</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </Stack>
               </TabPanel>
             </TabPanels>
           </Tabs>
