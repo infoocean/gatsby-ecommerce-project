@@ -9,17 +9,15 @@ module.exports = {
       resolve: "@pasdo501/gatsby-source-woocommerce",
       options: {
         // Base URL of Wordpress site
-        api: "wordpress.domain",
-
+        api: "https://furniture.mangoitsol.com",
         // set to false to not see verbose output during build
         // default: true
         verbose: true,
-
         // true if using https. otherwise false.
         https: false,
         api_keys: {
-          consumer_key: "",
-          consumer_secret: "",
+          consumer_key: "ck_6cf353bb47b6da0c254907ef6f23f3be37b96cc4",
+          consumer_secret: "cs_9a67c76409f19b1f50e77debeca371de2a22a84a",
         },
         // Array of strings with fields you'd like to create nodes for...
         fields: ["products", "products/categories", "products/attributes"],
@@ -55,7 +53,8 @@ module.exports = {
           "Sku",
           "Subscription",
         ],
-        secretKey: "stripe_secret_key_here",
+        secretKey:
+          "sk_test_51LkLlPLVp3cdDpUh7AUoQIdolBC7QY9JVlF5okcCNIER6wfF7dy5D1sk3sCW4Pqz50hPL6vlJP7YpOfYoJjKeJGQ00Kwtav4kX",
         downloadFiles: true,
       },
     },
