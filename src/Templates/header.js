@@ -60,6 +60,17 @@ function Header() {
               variant={"link"}
               href={"#"}
             >
+              <Link to="/productdet/cart" style={{ marginRight: "20px" }}>
+                <b>Cart</b>
+              </Link>
+            </Button>
+            <Button
+              as={"a"}
+              fontSize={"sm"}
+              fontWeight={400}
+              variant={"link"}
+              href={"#"}
+            >
               <Link to="/auth/login">Sign In</Link>
             </Button>
             <Button
