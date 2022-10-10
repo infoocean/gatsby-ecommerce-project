@@ -56,7 +56,7 @@ function Productdet({ data }) {
   // console.log(mydata.wcProducts);
   // console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
-  console.log("#################",myproductdet);
+  console.log("#################", myproductdet);
 
   const [formdarta, setformdata] = useState();
 
