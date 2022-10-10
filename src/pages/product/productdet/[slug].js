@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Container,
@@ -52,11 +52,16 @@ export const query = graphql`
 
 function Productdet({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  //const mydata = useStaticQuery(query);
-  //console.log(mydata.wcProducts);
-  //console.log(data.wcProducts);
+  // const mydata = useStaticQuery(query);
+  // console.log(mydata.wcProducts);
+  // console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
-  //console.log(myproductdet);
+  console.log("#################",myproductdet);
+
+  const [formdarta, setformdata] = useState();
+
+  const handleform = () => {};
+
   return (
     <>
       {/*header component*/}
@@ -139,7 +144,7 @@ function Productdet({ data }) {
                   <RadioGroup>
                     <Text fontSize="1xl">Front Waist Height</Text>
                     <Stack direction="row" mt={1}>
-                      <Radio value="1">12</Radio>
+                      <Radio value="12">12</Radio>
                       <Radio value="2">13</Radio>
                       <Radio value="3">14</Radio>
                       <Radio value="4">15</Radio>
@@ -163,8 +168,8 @@ function Productdet({ data }) {
             </TabPanels>
           </Tabs>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+            <Button onClick={handleform} colorScheme="blue" mr={3}>
+              Submit
             </Button>
           </ModalFooter>
         </ModalContent>

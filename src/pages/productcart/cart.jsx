@@ -10,20 +10,14 @@ import {
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { HiRefresh } from "react-icons/hi";
 import { IoArrowRedoSharp, IoArrowUndoSharp } from "react-icons/io5";
+import Header from "../../Templates/header";
 
-function cart() {
-  const [state, dispatch] = useReducer(rerducer, initialstate);
-  const [quantity, setquantity] = useState(1);
-  function handleincrement() {
-    setquantity(quantity + 1);
-  }
-  function handledecrement() {
-    if (quantity > 1) {
-      setquantity(quantity - 1);
-    } else {
-      return 1;
-    }
-  }
+import "@popperjs/core/dist/umd/popper.min";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min";
+import { Link } from "gatsby";
+
+function Cart() {
   const initialstate = 1;
   const rerducer = (state, action) => {
     //console.log(state, action);
@@ -37,9 +31,22 @@ function cart() {
       }
     }
   };
+  const [state, dispatch] = useReducer(rerducer, initialstate);
+  const [quantity, setquantity] = useState(1);
+  function handleincrement() {
+    setquantity(quantity + 1);
+  }
+  function handledecrement() {
+    if (quantity > 1) {
+      setquantity(quantity - 1);
+    } else {
+      return 1;
+    }
+  }
 
   return (
     <>
+      <Header />
       <Container maxW={"7xl"}>
         <Stack
           align={"center"}
@@ -174,23 +181,27 @@ function cart() {
                 <tfoot>
                   <tr>
                     <td>
-                      <a href="#" class="btn btn-warning">
-                        <HStack>
-                          <IoArrowUndoSharp />
-                          <Text>Continue Shopping</Text>
-                        </HStack>
-                      </a>
+                      <Link to="/shop">
+                        <a class="btn btn-warning">
+                          <HStack>
+                            <IoArrowUndoSharp />
+                            <Text>Continue Shopping</Text>
+                          </HStack>
+                        </a>
+                      </Link>
                     </td>
                     <td colspan="2" class="hidden-xs"></td>
                     <td class="hidden-xs text-center">
                       <strong>Total $1.99</strong>
                     </td>
                     <td>
-                      <a href="#" class="btn btn-success btn-block">
-                        <HStack>
-                          <Text>Checkout</Text> <IoArrowRedoSharp />
-                        </HStack>
-                      </a>
+                      <Link to="/CheckoutPage/checkout">
+                        <a class="btn btn-success btn-block">
+                          <HStack>
+                            <Text>Checkout</Text> <IoArrowRedoSharp />
+                          </HStack>
+                        </a>
+                      </Link>
                     </td>
                   </tr>
                 </tfoot>
@@ -203,4 +214,4 @@ function cart() {
   );
 }
 
-export default cart;
+export default Cart;

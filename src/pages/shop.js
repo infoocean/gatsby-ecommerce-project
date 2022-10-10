@@ -10,6 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import Header from "../Templates/header";
+import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
 
 const query = graphql`
@@ -40,6 +41,8 @@ function Shop() {
         <SimpleGrid columns={[1, null, 3]} spacing="40px">
           {mydata.slice(0, 8).map((item, key) => {
             const { name, images, price, description, slug } = item;
+            const slugTitle = slugify(slug, { lower: true });
+
             return (
               <Box>
                 <Center py={6}>
@@ -51,7 +54,7 @@ function Shop() {
                     p={6}
                     overflow={"hidden"}
                   >
-                    <Link to={`/product/productdet/${slug}`}>
+                    <Link to={`/product/productdet/${slugTitle}`}>
                       <Box h={"210px"} bg={"gray.100"}>
                         <Image
                           style={{ width: "100%", height: "100%" }}

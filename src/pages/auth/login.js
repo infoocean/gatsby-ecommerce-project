@@ -30,11 +30,25 @@ export default function LoginForm() {
     setpassword(e.target.value);
   };
 
-  const HandleLoginform = (e) => {
+  const HandleLoginform = async (e) => {
     e.preventDefault();
     if (email !== "" && password !== "") {
       let data = JSON.stringify({ email, password });
-      alert(data);
+      //alert(data);
+      const res = await fetch(
+        "https://gatsbyproject-9c16d-default-rtdb.firebaseio.com/gatsbydatabase.json",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: data,
+        }
+      );
+
+      console.log(res);
+      return false;
+
       setemail("");
       setpassword("");
       seterr("");

@@ -40,7 +40,9 @@ function Header() {
           justify={{ base: "center", md: "space-between" }}
           align={{ base: "center", md: "center" }}
         >
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
           <Stack direction={"row"} spacing={6}>
             <Link to="/shop">Shop</Link>
             <Link to="/shop">Live Demo</Link>
