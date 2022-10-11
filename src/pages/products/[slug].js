@@ -24,10 +24,39 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import Header from "../../Templates/header";
+import Header from "../../../Templates/header";
+import { graphql, useStaticQuery } from "gatsby";
 
-function Productdet() {
+export const query = graphql`
+  query ($slug: String) {
+    wcProducts(slug: { eq: $slug }) {
+      slug
+      price
+      name
+      id
+      categories {
+        name
+        slug
+        description
+      }
+      description
+      featured
+      images {
+        name
+        src
+        alt
+      }
+    }
+  }
+`;
+
+function Productdet({ data }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  //const mydata = useStaticQuery(query);
+  //console.log(mydata.wcProducts);
+  //console.log(data.wcProducts);
+  const myproductdet = data.wcProducts;
+  //console.log(myproductdet);
   return (
     <>
       {/*header component*/}
@@ -47,11 +76,8 @@ function Productdet() {
             >
               Grey Classic
             </Text>
-            <Text>Price : $2000</Text>
-            <Text>
-              Long sleeves shirt appropriate for dressing up in a suite with or
-              without a tie.
-            </Text>
+            <Text>Price : ${myproductdet.price}</Text>
+            <Text>{myproductdet.description.replace(/(<([^>]+)>)/gi, "")}</Text>
             <Stack spacing={6} direction={"row"}>
               <Button
                 px={6}
@@ -81,19 +107,7 @@ function Productdet() {
                 Description
               </Heading>
               <Text>
-                An incredibly beautiful business-ready light blue wide stripe.
-                Made with ultra-premium certified West Indian Sea Island Cotton
-                from Barbados, this twill has the perfect combination of
-                durability, super soft hand, vibrant color, and silky luster.
-                Known to many as the cashmere of cotton, Sea Island cotton
-                represents just .0004% of the extra-long staple cotton produced
-                in the world each year. It's woven with a remarkably smooth 100s
-                2-ply construction in the perfect weight for year-round wear.
-                The fabric is woven in Italy by the famed David &amp; John
-                Anderson mill, and with a near 200-year heritage of making some
-                of the world's finest shirting fabric, DJA is Albini's
-                highest-end line. Learn more about premium Sea Island Cotton
-                here.
+                {myproductdet.description.replace(/(<([^>]+)>)/gi, "")}
               </Text>
             </Stack>
           </Stack>
@@ -101,9 +115,7 @@ function Productdet() {
             <Image
               rounded={"md"}
               alt={"feature image"}
-              src={
-                "https://images.unsplash.com/photo-1554200876-56c2f25224fa?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-              }
+              //src={images && images[0] && images[0].src}
               objectFit={"cover"}
             />
           </Flex>

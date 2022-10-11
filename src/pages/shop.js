@@ -54,7 +54,7 @@ function Shop() {
                     p={6}
                     overflow={"hidden"}
                   >
-                    <Link to={`/product/productdet/${slugTitle}`}>
+                    <Link to={`/Products/${slugTitle}`}>
                       <Box h={"210px"} bg={"gray.100"}>
                         <Image
                           style={{ width: "100%", height: "100%" }}
@@ -67,7 +67,6 @@ function Shop() {
                       <Heading fontSize={"2xl"} fontFamily={"body"} mt={1}>
                         {name}
                       </Heading>
-                      <Text color={"gray.500"}>Blue Checked</Text>
                       <Text color={"gray.500"}>{}</Text>
                       <Text color={"gray.500"}>
                         {description.replace(/(<([^>]+)>)/gi, "")}

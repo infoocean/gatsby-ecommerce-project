@@ -15,14 +15,23 @@ import { graphql, Link, useStaticQuery } from "gatsby";
 const query = graphql`
   {
     allWcProducts {
+      totalCount
       nodes {
-        description
         id
         images {
+          alt
+          name
           src
         }
         name
         price
+        regular_price
+        sale_price
+        slug
+        categories {
+          name
+        }
+        description
       }
     }
   }
@@ -30,19 +39,28 @@ const query = graphql`
 
 function BestsellerProducts() {
   const data = useStaticQuery(query);
-  //console.log(data.allWcProducts.nodes);
+  console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
   return (
     <>
       <Box>
-        <Container maxW={"7xl"} py={5} as={Stack} >
+        <Container maxW={"7xl"} py={5} as={Stack}>
           <Stack spacing={0} align={"center"}>
             <Heading>Our Best Seller Suit & Trousers</Heading>
             <Text>We have been working with clients around the world</Text>
           </Stack>
           <SimpleGrid columns={[1, null, 3]} spacing="40px">
             {mydata.slice(0, 8).map((item, key) => {
-              const { name, images, price, description, id } = item;
+              const {
+                name,
+                images,
+                price,
+                description,
+                slug,
+                regular_price,
+                sale_price,
+                categories,
+              } = item;
               return (
                 <Box>
                   <Center py={2}>
@@ -54,7 +72,7 @@ function BestsellerProducts() {
                       p={4}
                       overflow={"hidden"}
                     >
-                      <Link to={`/product/productdet/${id}`}>
+                      <Link to={`/Products/${slug}`}>
                         <Box h={"210px"} bg={"gray.100"}>
                           <Image
                             style={{ width: "100%", height: "100%" }}
@@ -67,12 +85,20 @@ function BestsellerProducts() {
                         <Heading fontSize={"2xl"} fontFamily={"body"} mt={1}>
                           {name}
                         </Heading>
-                        <Text color={"gray.500"}>Blue Checked</Text>
-                        <Text color={"gray.500"}>{}</Text>
                         <Text color={"gray.500"}>
                           {description.replace(/(<([^>]+)>)/gi, "")}
                         </Text>
-                        <Text color={"gray.500"}>${price}</Text>
+                        <Text color={"gray.500"}>
+                          Categories:{" "}
+                          {categories && categories[0] && categories[0].name}
+                        </Text>
+                        {/* <Text color={"gray.500"}>
+                          Reg Price: ${regular_price}
+                        </Text>
+                        <Text color={"gray.500"}>
+                          Sale Price: ${sale_price}
+                        </Text> */}
+                        <Text color={"gray.500"}>Price: ${price}</Text>
                       </Stack>
                     </Box>
                   </Center>

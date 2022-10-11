@@ -3,6 +3,7 @@ module.exports = {
     title: `My Gatsby Site`,
     siteUrl: `https://www.yourdomain.tld`,
   },
+
   plugins: [
     //chakra ui plugin
     "@chakra-ui/gatsby-plugin",
