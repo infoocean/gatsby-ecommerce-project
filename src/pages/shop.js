@@ -54,7 +54,7 @@ function Shop() {
                     p={6}
                     overflow={"hidden"}
                   >
-                    <Link to={`/Products/${slugTitle}`}>
+                    <Link to={`/product/${slugTitle}`}>
                       <Box h={"210px"} bg={"gray.100"}>
                         <Image
                           style={{ width: "100%", height: "100%" }}

@@ -62,7 +62,7 @@ function Header() {
               variant={"link"}
               href={"#"}
             >
-              <Link to="/productcart/cart" style={{ marginRight: "20px" }}>
+              <Link to="/cart/productcartdet" style={{ marginRight: "20px" }}>
                 <b>Cart</b>
               </Link>
             </Button>

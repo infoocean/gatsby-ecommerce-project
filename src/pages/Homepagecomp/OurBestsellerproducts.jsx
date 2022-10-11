@@ -72,7 +72,7 @@ function BestsellerProducts() {
                       p={4}
                       overflow={"hidden"}
                     >
-                      <Link to={`/Products/${slug}`}>
+                      <Link to={`/product/${slug}`}>
                         <Box h={"210px"} bg={"gray.100"}>
                           <Image
                             style={{ width: "100%", height: "100%" }}

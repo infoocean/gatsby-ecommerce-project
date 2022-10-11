@@ -24,7 +24,8 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import Header from "../../../Templates/header";
+
+import Header from "../../Templates/header";
 import { graphql, useStaticQuery } from "gatsby";
 
 export const query = graphql`
@@ -50,13 +51,57 @@ export const query = graphql`
   }
 `;
 
-function Productdet({ data }) {
+const data1 = {
+  jacket: [
+    {
+      label: "Front_Waist_Height",
+      Front_Waist_Height_data: [
+        { val1: 10 },
+        { val2: 20 },
+        { val3: 30 },
+        { val4: 40 },
+      ],
+    },
+    {
+      label: "Back_length",
+      Back_length: { val1: 10, val2: 20, val3: 30, val4: 40 },
+    },
+    {
+      label: "Stomach",
+      Stomachdata: { val1: 10, val2: 20, val3: 30, val4: 40 },
+    },
+    { label: "Neck", Neckdata: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    {
+      label: "Back_waist_height",
+      Back_waist_height: { val1: 10, val2: 20, val3: 30, val4: 40 },
+    },
+    { label: "Waist", Waist: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    {
+      label: "Front_Shoulder",
+      Front_Shoulder: { val1: 10, val2: 20, val3: 30, val4: 40 },
+    },
+    { label: "Bicep", Bicep: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    {
+      label: "Nape_to_waist",
+      Nape_to_waist: { val1: 10, val2: 20, val3: 30, val4: 40 },
+    },
+    { label: "SleaveL", SleaveL: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    { label: "SleeveR", SleeveR: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    { label: "Seat", Seat: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    { label: "Shoulder", Shoulder: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+    { label: "Chest", Chest: { val1: 10, val2: 20, val3: 30, val4: 40 } },
+  ],
+};
+const datajacket = data1.jacket;
+
+function Shop({ data }) {
+  //console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
   //const mydata = useStaticQuery(query);
   //console.log(mydata.wcProducts);
   //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
-  //console.log(myproductdet);
+  // console.log(myproductdet);
   return (
     <>
       {/*header component*/}
@@ -100,7 +145,13 @@ function Productdet({ data }) {
             </Stack>
             <Stack>
               <Text>SKU : BLUEWYRSS21001-1-2-1-1</Text>
-              <Text>Categories : Suit</Text>
+              <Text>
+                Categories :{" "}
+                {myproductdet &&
+                  myproductdet.categories &&
+                  myproductdet.categories[0] &&
+                  myproductdet.categories[0].name}
+              </Text>
             </Stack>
             <Stack>
               <Heading fontSize={"2xl"} mt={5}>
@@ -115,7 +166,11 @@ function Productdet({ data }) {
             <Image
               rounded={"md"}
               alt={"feature image"}
-              //src={images && images[0] && images[0].src}
+              src={
+                myproductdet.images &&
+                myproductdet.images[0] &&
+                myproductdet.images[0].src
+              }
               objectFit={"cover"}
             />
           </Flex>
@@ -136,15 +191,14 @@ function Productdet({ data }) {
             <TabPanels>
               <TabPanel>
                 <Stack>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Front Waist Height</Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio value="1">12</Radio>
-                      <Radio value="2">13</Radio>
-                      <Radio value="3">14</Radio>
-                      <Radio value="4">15</Radio>
-                    </Stack>
-                  </RadioGroup>
+                  {datajacket.map((item, key) => {
+                    return (
+                      <RadioGroup>
+                        <Text fontSize="1xl">{item.label}</Text>
+                        <Stack direction="row" mt={1}></Stack>
+                      </RadioGroup>
+                    );
+                  })}
                 </Stack>
               </TabPanel>
               <TabPanel>
@@ -164,7 +218,7 @@ function Productdet({ data }) {
           </Tabs>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              Submit
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -173,4 +227,4 @@ function Productdet({ data }) {
   );
 }
 
-export default Productdet;
+export default Shop;
