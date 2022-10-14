@@ -1,7 +1,8 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Button,
   Container,
+  Heading,
   HStack,
   Input,
   Stack,
@@ -17,8 +18,40 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min";
 import { Link } from "gatsby";
 
+const product = [
+  {
+    id: 1,
+    product_name: "product1",
+    descriprion:
+      " Quis aute iure reprehenderit in voluptate velit essecillum dolore.",
+    price: "$20",
+    image:
+      "https://cdn.pixabay.com/photo/2020/05/26/09/32/product-5222398_960_720.jpg",
+  },
+  {
+    id: 2,
+    product_name: "product2",
+    descriprion: " Quis aute iure reprehenderit in voluptate.",
+    price: "$10",
+    image:
+      "https://static.livebooks.com/abc61dbc6e9c403b917975eb48d2d97d/i/f2c81f819c994f5eb2312f9948520c2a/1/4SoifmQp7LJ6yDtMuFY2x/Swan-Optic-22089.jpg",
+  },
+  {
+    id: 3,
+    product_name: "product3",
+    descriprion:
+      " Quis aute iure reprehenderit in voluptate velit essecillum dolore.",
+    price: "$5",
+    image:
+      "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  },
+];
+
+//console.log(product);
+
 function Cart() {
-  const initialstate = 1;
+  const [calculation, setcalculation] = useState({ subtotal: 1, total: 1 });
+
   const rerducer = (state, action) => {
     //console.log(state, action);
     if (action.type === "increment") {
@@ -31,18 +64,9 @@ function Cart() {
       }
     }
   };
-  const [state, dispatch] = useReducer(rerducer, initialstate);
-  const [quantity, setquantity] = useState(1);
-  function handleincrement() {
-    setquantity(quantity + 1);
-  }
-  function handledecrement() {
-    if (quantity > 1) {
-      setquantity(quantity - 1);
-    } else {
-      return 1;
-    }
-  }
+  const [state, dispatch] = useReducer(rerducer, 1);
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -56,6 +80,9 @@ function Cart() {
         >
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
             <div class="container">
+              <Heading style={{ fontSize: "20px" }}>
+                Total (0) item in your cart
+              </Heading>
               <table id="cart" class="table table-hover table-condensed">
                 <thead>
                   <tr>
@@ -69,114 +96,65 @@ function Cart() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td data-th="Product">
-                      <div class="row">
-                        <div class="col-sm-2 hidden-xs">
-                          <img
-                            src="https://img.freepik.com/free-vector/white-product-podium-with-green-tropical-palm-leaves-golden-round-arch-green-wall_87521-3023.jpg"
-                            alt="..."
-                            class="img-responsive"
-                          />
-                        </div>
-                        <div class="col-sm-10">
-                          <h4 class="nomargin">Product 1</h4>
-                          <p>
-                            Quis aute iure reprehenderit in voluptate velit esse
-                            cillum dolore.
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td data-th="Price">$1.99</td>
-                    <td data-th="Quantity">
-                      <HStack>
-                        <Button
-                          colorScheme="gray"
-                          size="xs"
-                          onClick={handledecrement}
-                        >
-                          -
-                        </Button>
-                        <Input type="button" size="xs" value={quantity} />
-                        <Button
-                          colorScheme="gray"
-                          size="xs"
-                          onClick={handleincrement}
-                        >
-                          +
-                        </Button>
-                      </HStack>
-                    </td>
-                    <td data-th="Subtotal" class="text-center">
-                      1.99
-                    </td>
-                    <td class="actions" data-th="">
-                      <button
-                        class="btn btn-info btn-sm "
-                        style={{ marginRight: "10px" }}
-                      >
-                        <HiRefresh />
-                      </button>
-                      <button class="btn btn-danger btn-sm">
-                        <RiDeleteBin5Line />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td data-th="Product">
-                      <div class="row">
-                        <div class="col-sm-2 hidden-xs">
-                          <img
-                            src="https://t3.ftcdn.net/jpg/05/00/16/32/360_F_500163262_0voHcgJfF7yR4TPnWOw1527Qmlj4zfd3.jpg"
-                            alt="..."
-                            class="img-responsive"
-                          />
-                        </div>
-                        <div class="col-sm-10">
-                          <h4 class="nomargin">Product 2</h4>
-                          <p>
-                            Quis aute iure reprehenderit in voluptate velit esse
-                            cillum dolore.
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td data-th="Price">$1.99</td>
-                    <td data-th="Quantity">
-                      <HStack>
-                        <Button
-                          colorScheme="gray"
-                          size="xs"
-                          onClick={() => dispatch({ type: "decrement" })}
-                        >
-                          -
-                        </Button>
-                        <Input size="xs" value={Number(state)} type="button" />
-                        <Button
-                          colorScheme="gray"
-                          size="xs"
-                          onClick={() => dispatch({ type: "increment" })}
-                        >
-                          +
-                        </Button>
-                      </HStack>
-                    </td>
-                    <td data-th="Subtotal" class="text-center">
-                      1.99
-                    </td>
-                    <td class="actions" data-th="">
-                      <button
-                        class="btn btn-info btn-sm "
-                        style={{ marginRight: "10px" }}
-                      >
-                        <HiRefresh />
-                      </button>
-                      <button class="btn btn-danger btn-sm">
-                        <RiDeleteBin5Line />
-                      </button>
-                    </td>
-                  </tr>
+                  {product.map((item, key) => {
+                    return (
+                      <tr key={key}>
+                        <td data-th="Product">
+                          <div class="row">
+                            <div class="col-sm-2 hidden-xs">
+                              <img
+                                src={item.image}
+                                alt="..."
+                                class="img-responsive"
+                              />
+                            </div>
+                            <div class="col-sm-10">
+                              <h4 class="nomargin">{item.product_name}</h4>
+                              <p>{item.descriprion}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td data-th="Price">{item.price}</td>
+                        <td data-th="Quantity">
+                          <HStack>
+                            <Button
+                              colorScheme="gray"
+                              size="xs"
+                              onClick={() => dispatch({ type: "decrement" })}
+                            >
+                              -
+                            </Button>
+                            <Input
+                              size="xs"
+                              value={Number(state)}
+                              type="button"
+                            />
+                            <Button
+                              colorScheme="gray"
+                              size="xs"
+                              onClick={() => dispatch({ type: "increment" })}
+                            >
+                              +
+                            </Button>
+                          </HStack>
+                        </td>
+                        <td data-th="Subtotal" class="text-center">
+                          {calculation.subtotal}
+                        </td>
+                        <td class="actions" data-th="">
+                          <button
+                            class="btn btn-info btn-sm "
+                            style={{ marginRight: "10px" }}
+                          >
+                            <HiRefresh />
+                          </button>
+                          <button class="btn btn-danger btn-sm">
+                            <RiDeleteBin5Line />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
                 <tfoot>
                   <tr>
@@ -192,10 +170,10 @@ function Cart() {
                     </td>
                     <td colspan="2" class="hidden-xs"></td>
                     <td class="hidden-xs text-center">
-                      <strong>Total $1.99</strong>
+                      <strong>${calculation.total}</strong>
                     </td>
                     <td>
-                      <Link to="/CheckoutPage/checkout">
+                      <Link to="/CheckoutPage/teststripepayment">
                         <a class="btn btn-success btn-block">
                           <HStack>
                             <Text>Checkout</Text> <IoArrowRedoSharp />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Button,
   Container,
@@ -26,7 +26,9 @@ import {
 } from "@chakra-ui/react";
 
 import Header from "../../Templates/header";
-import { graphql, useStaticQuery } from "gatsby";
+import { graphql, Link, useStaticQuery } from "gatsby";
+import slugify from "slugify";
+import { MyCart } from "../Store/Context";
 
 export const query = graphql`
   query ($slug: String) {
@@ -51,49 +53,6 @@ export const query = graphql`
   }
 `;
 
-const data1 = {
-  jacket: [
-    {
-      label: "Front_Waist_Height",
-      Front_Waist_Height_data: [
-        { val1: 10 },
-        { val2: 20 },
-        { val3: 30 },
-        { val4: 40 },
-      ],
-    },
-    {
-      label: "Back_length",
-      Back_length: { val1: 10, val2: 20, val3: 30, val4: 40 },
-    },
-    {
-      label: "Stomach",
-      Stomachdata: { val1: 10, val2: 20, val3: 30, val4: 40 },
-    },
-    { label: "Neck", Neckdata: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    {
-      label: "Back_waist_height",
-      Back_waist_height: { val1: 10, val2: 20, val3: 30, val4: 40 },
-    },
-    { label: "Waist", Waist: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    {
-      label: "Front_Shoulder",
-      Front_Shoulder: { val1: 10, val2: 20, val3: 30, val4: 40 },
-    },
-    { label: "Bicep", Bicep: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    {
-      label: "Nape_to_waist",
-      Nape_to_waist: { val1: 10, val2: 20, val3: 30, val4: 40 },
-    },
-    { label: "SleaveL", SleaveL: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    { label: "SleeveR", SleeveR: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    { label: "Seat", Seat: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    { label: "Shoulder", Shoulder: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-    { label: "Chest", Chest: { val1: 10, val2: 20, val3: 30, val4: 40 } },
-  ],
-};
-const datajacket = data1.jacket;
-
 function Shop({ data }) {
   //console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -101,7 +60,18 @@ function Shop({ data }) {
   //console.log(mydata.wcProducts);
   //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
-  // console.log(myproductdet);
+  //console.log(myproductdet);
+
+  // const { cart, setcart } = useContext(MyCart);
+  // console.log(cart);
+
+  function submitjacketsize(e) {
+    alert(e.target.name);
+  }
+  const [trouserdata, settrouserdata] = useState([]);
+  function handleurise(e) {}
+  function handletrouserdata(e) {}
+
   return (
     <>
       {/*header component*/}
@@ -122,15 +92,31 @@ function Shop({ data }) {
               Grey Classic
             </Text>
             <Text>Price : ${myproductdet.price}</Text>
-            <Text>{myproductdet.description.replace(/(<([^>]+)>)/gi, "")}</Text>
+            <Text>{myproductdet.name}</Text>
             <Stack spacing={6} direction={"row"}>
               <Button
                 px={6}
                 colorScheme={"orange"}
                 bg={"blue.400"}
                 _hover={{ bg: "orange.500" }}
+                // onClick={() => setcart([...cart, myproductdet])}
               >
                 Add To Cart
+              </Button>
+              <Button
+                colorScheme={"orange"}
+                bg={"blue.400"}
+                _hover={{ bg: "orange.500" }}
+                px={6}
+              >
+                <Link
+                  to={`/CheckoutPage/product/${slugify(myproductdet.slug, {
+                    lower: true,
+                  })}`}
+                >
+                  {" "}
+                  Buy Now
+                </Link>
               </Button>
 
               <Button
@@ -191,36 +177,62 @@ function Shop({ data }) {
             <TabPanels>
               <TabPanel>
                 <Stack>
-                  {datajacket.map((item, key) => {
-                    return (
-                      <RadioGroup>
-                        <Text fontSize="1xl">{item.label}</Text>
-                        <Stack direction="row" mt={1}></Stack>
-                      </RadioGroup>
-                    );
-                  })}
+                  <RadioGroup>
+                    <Text fontSize="1xl">Front Waist Height</Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio value="12" name="frontweistheight">
+                        12
+                      </Radio>
+                      <Radio value="13" name="frontweistheight">
+                        13
+                      </Radio>
+                      <Radio value="14" name="frontweistheight">
+                        14
+                      </Radio>
+                      <Radio value="15" name="frontweistheight">
+                        15
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
                 </Stack>
+                <ModalFooter>
+                  <Button colorScheme="blue" mr={3} onClick={submitjacketsize}>
+                    Submit Jacket Size
+                  </Button>
+                </ModalFooter>
               </TabPanel>
               <TabPanel>
                 <Stack>
                   <RadioGroup>
                     <Text fontSize="1xl">U-rise</Text>
                     <Stack direction="row" mt={1}>
-                      <Radio value="1">12</Radio>
-                      <Radio value="2">13</Radio>
-                      <Radio value="3">14</Radio>
-                      <Radio value="4">15</Radio>
+                      <Radio value="12" onChange={handleurise} name="urise">
+                        12
+                      </Radio>
+                      <Radio value="13" onChange={handleurise} name="urise">
+                        13
+                      </Radio>
+                      <Radio value="14" onChange={handleurise} name="urise">
+                        14
+                      </Radio>
+                      <Radio value="15" onChange={handleurise} name="urise">
+                        15
+                      </Radio>
                     </Stack>
                   </RadioGroup>
+                  <ModalFooter>
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={handletrouserdata}
+                    >
+                      Submit Trouser Size
+                    </Button>
+                  </ModalFooter>
                 </Stack>
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Submit
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

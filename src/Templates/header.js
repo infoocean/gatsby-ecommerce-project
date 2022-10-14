@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "gatsby";
 import {
   Box,
@@ -24,6 +24,9 @@ const Logo = () => {
 };
 
 function Header() {
+  useEffect(() => {}, []);
+  const totalitem = 0;
+
   return (
     <>
       {/*header navbar start*/}
@@ -63,7 +66,9 @@ function Header() {
               href={"#"}
             >
               <Link to="/cart/productcartdet" style={{ marginRight: "20px" }}>
-                <b>Cart</b>
+                <b>
+                  Cart<sup>{totalitem}</sup>
+                </b>
               </Link>
             </Button>
             <Button
