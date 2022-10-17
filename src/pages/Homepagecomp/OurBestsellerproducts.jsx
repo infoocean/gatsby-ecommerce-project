@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Center,
@@ -8,9 +8,10 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  Button,
 } from "@chakra-ui/react";
-
 import { graphql, Link, useStaticQuery } from "gatsby";
+import { MyCart } from "../Store/Context";
 
 const query = graphql`
   {
@@ -39,8 +40,12 @@ const query = graphql`
 
 function BestsellerProducts() {
   const data = useStaticQuery(query);
-  console.log(data.allWcProducts.nodes);
+  //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
+
+  // const { cart, setcart } = useContext(MyCart);
+  // console.log(cart);
+
   return (
     <>
       <Box>
@@ -99,6 +104,12 @@ function BestsellerProducts() {
                           Sale Price: ${sale_price}
                         </Text> */}
                         <Text color={"gray.500"}>Price: ${price}</Text>
+                        <Button
+                          colorScheme="orange"
+                          // onClick={() => setcart([...cart, item])}
+                        >
+                          add to cart
+                        </Button>
                       </Stack>
                     </Box>
                   </Center>

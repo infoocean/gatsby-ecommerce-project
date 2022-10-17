@@ -1,37 +1,8 @@
 import React, { useContext } from "react";
 import Header from "../../../Templates/header";
-import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { graphql, useStaticQuery } from "gatsby";
-
-let stripePromise;
-const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(
-      "pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
-    );
-  }
-  return stripePromise;
-};
-
-const buttonStyles = {
-  display: "block",
-  fontSize: "13px",
-  textAlign: "center",
-  color: "#000",
-  padding: "12px",
-  boxShadow: "2px 5px 10px rgba(0,0,0,.1)",
-  backgroundColor: "rgb(255, 178, 56)",
-  borderRadius: "6px",
-  letterSpacing: "1.5px",
-};
-
-const buttonDisabledStyles = {
-  opacity: "0.5",
-  cursor: "not-allowed",
-  width: "100%",
-};
-
+import { graphql, navigate, useStaticQuery } from "gatsby";
+import StripeCheckout from "react-stripe-checkout";
+import { api } from "../../../API/API";
 export const query = graphql`
   query ($slug: String) {
     wcProducts(slug: { eq: $slug }) {
@@ -56,26 +27,176 @@ export const query = graphql`
 `;
 
 function CheckoutPage() {
-  const [loading, setLoading] = useState(false);
   const mydata = useStaticQuery(query);
   const mypdata = mydata.wcProducts;
   //console.log(mypdata);
 
-  const redirectToCheckout = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    const stripe = await getStripe();
-    const { error } = await stripe.redirectToCheckout({
-      mode: "payment",
-      lineItems: [{ price: "price_1LsJcmLVp3cdDpUhrxQ6emYN", quantity: 1 }],
-      successUrl: `http://localhost:8000/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `http://localhost:8000/`,
-    });
+  const onToken = (token, address) => {
+    //console.log(token, address);
+    const data = { token, address, ammount: 100 };
+    //console.log(data);
+    //return false;
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var raw = JSON.stringify(data);
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    fetch("http://localhost:4000/stripe-payment-integration", requestOptions)
+      .then(function (response) {
+        //console.log(response);
+        console.log(response.data);
+        console.log(response.status);
+        // if (response.data && response.data.status === "succeeded") {
+        //   const tnx_id = localStorage.setItem(
+        //     "tnx_id",
+        //     response.data.charges.data[0].balance_transaction
+        //   );
+        //   const receipt = localStorage.setItem(
+        //     "receipt",
+        //     response.data.charges.data[0].receipt_url
+        //   );
+        //   const newcreateorder = {
+        //     payment_method: response.data.payment_method_types[0],
+        //     payment_method_title: response.data.description,
+        //     set_paid: true,
+        //     billing: {
+        //       first_name: response.data.shipping.name,
+        //       address_1: response.data.shipping.address.line1,
+        //       address_2: "",
+        //       city: response.data.shipping.address.city,
+        //       state: response.data.shipping.address.state,
+        //       postcode: response.data.shipping.address.postal_code,
+        //       country: response.data.shipping.address.country,
+        //       email: "sj2585097@gmail.com",
+        //       phone: "9131649079",
+        //     },
+        //     shipping: {
+        //       first_name: response.data.shipping.name,
+        //       address_1: response.data.shipping.address.line1,
+        //       address_2: "",
+        //       city: response.data.shipping.address.city,
+        //       state: response.data.shipping.address.state,
+        //       postcode: response.data.shipping.address.postal_code,
+        //       country: response.data.shipping.address.country,
+        //     },
+        //     line_items: [
+        //       {
+        //         product_id: mypdata.id,
+        //         quantity: 1,
+        //       },
+        //     ],
+        //     shipping_lines: [
+        //       {
+        //         method_id: response.data.charges.data[0].balance_transaction,
+        //         method_title: "Flat Rate",
+        //         total: mypdata.price,
+        //       },
+        //     ],
+        //   };
+        //   console.log("new create order^^^^^^^", newcreateorder);
+        //   api
+        //     .post("orders", newcreateorder)
+        //     .then((response) => {
+        //       //console.log(response.data);
+        //       if (response.data && response.data.id > 0) {
+        //         const data = {
+        //           status: "completed",
+        //         };
+        //         // api
+        //         //   .put(`orders/${response.data.id}`, data)
+        //         //   .then((response) => {
+        //         //     //console.log(response.data);
+        //         //   })
+        //         //   .catch((error) => {
+        //         //     //console.log(error.response.data);
+        //         //   });
+        //         navigate(`/success/${response.data.id}`);
+        //       }
+        //     })
+        //     .catch((error) => {
+        //       //console.log(error.response.data);
+        //     });
+        // }
 
-    if (error) {
-      console.warn("Error:", error);
-      setLoading(false);
-    }
+        if (response.status === 200) {
+          const tnx_id = localStorage.setItem(
+            "tnx_id",
+            response.data.charges.data[0].balance_transaction
+          );
+          const receipt = localStorage.setItem(
+            "receipt",
+            response.data.charges.data[0].receipt_url
+          );
+          const newcreateorder = {
+            payment_method: response.data.payment_method_types[0],
+            payment_method_title: response.data.description,
+            set_paid: true,
+            billing: {
+              first_name: response.data.shipping.name,
+              address_1: response.data.shipping.address.line1,
+              address_2: "",
+              city: response.data.shipping.address.city,
+              state: response.data.shipping.address.state,
+              postcode: response.data.shipping.address.postal_code,
+              country: response.data.shipping.address.country,
+              email: "sj2585097@gmail.com",
+              phone: "9131649079",
+            },
+            shipping: {
+              first_name: response.data.shipping.name,
+              address_1: response.data.shipping.address.line1,
+              address_2: "",
+              city: response.data.shipping.address.city,
+              state: response.data.shipping.address.state,
+              postcode: response.data.shipping.address.postal_code,
+              country: response.data.shipping.address.country,
+            },
+            line_items: [
+              {
+                product_id: mypdata.id,
+                quantity: 1,
+              },
+            ],
+            shipping_lines: [
+              {
+                method_id: response.data.charges.data[0].balance_transaction,
+                method_title: "Flat Rate",
+                total: mypdata.price,
+              },
+            ],
+          };
+          console.log("new create order^^^^^^^", newcreateorder);
+          api
+            .post("orders", newcreateorder)
+            .then((response) => {
+              //console.log(response.data);
+              if (response.data && response.data.id > 0) {
+                const data = {
+                  status: "completed",
+                };
+                // api
+                //   .put(`orders/${response.data.id}`, data)
+                //   .then((response) => {
+                //     //console.log(response.data);
+                //   })
+                //   .catch((error) => {
+                //     //console.log(error.response.data);
+                //   });
+                navigate(`/success/${response.data.id}`);
+              }
+            })
+            .catch((error) => {
+              //console.log(error.response.data);
+            });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   return (
     <>
@@ -115,17 +236,31 @@ function CheckoutPage() {
           </div>
           <div className="col-lg-6 ">
             <div class="box-2 " style={{ width: "100%" }}>
-              <button
-                disabled={loading}
-                style={
-                  loading
-                    ? { ...buttonStyles, ...buttonDisabledStyles }
-                    : buttonStyles
-                }
-                onClick={redirectToCheckout}
+              <StripeCheckout
+                name={"Securly Payment"}
+                description="Big Data Stuff"
+                image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
+                amount="$100"
+                currency="USD"
+                stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
+                locale="India"
+                token={onToken}
+                email=""
+                shippingAddress
+                billingAddress
               >
-                Pay Now
-              </button>
+                <button
+                  style={{
+                    layout: "horizontal",
+                    fontSize: "17px",
+                    fontWeight: "bold",
+                    width: "100%",
+                  }}
+                  class="btn btn-primary"
+                >
+                  Pay With Card Stripe Payment
+                </button>
+              </StripeCheckout>
             </div>
           </div>
         </div>

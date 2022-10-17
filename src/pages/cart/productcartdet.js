@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import {
   Button,
   Container,
@@ -17,6 +17,7 @@ import "@popperjs/core/dist/umd/popper.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min";
 import { Link } from "gatsby";
+import { MyCart } from "../Store/Context";
 
 const product = [
   {
@@ -28,28 +29,14 @@ const product = [
     image:
       "https://cdn.pixabay.com/photo/2020/05/26/09/32/product-5222398_960_720.jpg",
   },
-  {
-    id: 2,
-    product_name: "product2",
-    descriprion: " Quis aute iure reprehenderit in voluptate.",
-    price: "$10",
-    image:
-      "https://static.livebooks.com/abc61dbc6e9c403b917975eb48d2d97d/i/f2c81f819c994f5eb2312f9948520c2a/1/4SoifmQp7LJ6yDtMuFY2x/Swan-Optic-22089.jpg",
-  },
-  {
-    id: 3,
-    product_name: "product3",
-    descriprion:
-      " Quis aute iure reprehenderit in voluptate velit essecillum dolore.",
-    price: "$5",
-    image:
-      "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
 ];
 
 //console.log(product);
 
 function Cart() {
+  // const { cart } = useContext(MyCart);
+  // console.log(cart);
+
   const [calculation, setcalculation] = useState({ subtotal: 1, total: 1 });
 
   const rerducer = (state, action) => {

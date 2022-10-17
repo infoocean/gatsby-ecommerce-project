@@ -24,11 +24,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-
 import Header from "../../Templates/header";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import slugify from "slugify";
-import { MyCart } from "../Store/Context";
 
 export const query = graphql`
   query ($slug: String) {
@@ -61,21 +59,33 @@ function Shop({ data }) {
   //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
   //console.log(myproductdet);
-
-  // const { cart, setcart } = useContext(MyCart);
-  // console.log(cart);
-
   function submitjacketsize(e) {
     alert(e.target.name);
   }
   const [trouserdata, settrouserdata] = useState([]);
-  function handleurise(e) {}
-  function handletrouserdata(e) {}
+  const [cart, setcart] = useState([]);
+
+  let mytrouserdata = [];
+  function handleurise(e) {
+    alert(e.target.value);
+    alert(e.target.name);
+  }
+  // function handleurise(e) {
+  //   alert(e.target.value);
+  // }
+  // function handleurise(e) {
+  //   alert(e.target.value);
+  // }
+
+  function handletrouserdata(e) {
+    
+    console.log(mytrouserdata);
+  }
 
   return (
     <>
       {/*header component*/}
-      <Header />
+      <Header cart={cart} />
       {/*product det component*/}
       <Container maxW={"5xl"} py={12}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
@@ -99,7 +109,7 @@ function Shop({ data }) {
                 colorScheme={"orange"}
                 bg={"blue.400"}
                 _hover={{ bg: "orange.500" }}
-                // onClick={() => setcart([...cart, myproductdet])}
+                onClick={() => setcart([...cart, myproductdet])}
               >
                 Add To Cart
               </Button>
@@ -216,6 +226,56 @@ function Shop({ data }) {
                         14
                       </Radio>
                       <Radio value="15" onChange={handleurise} name="urise">
+                        15
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                  <RadioGroup>
+                    <Text fontSize="1xl">Calf girth</Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio value="12" onChange={handleurise} name="urise">
+                        12
+                      </Radio>
+                      <Radio value="13" onChange={handleurise} name="urise">
+                        13
+                      </Radio>
+                      <Radio value="14" onChange={handleurise} name="urise">
+                        14
+                      </Radio>
+                      <Radio value="15" onChange={handleurise} name="urise">
+                        15
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                  <RadioGroup>
+                    <Text fontSize="1xl">Front Waist Length</Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio
+                        value="12"
+                        onChange={handleurise}
+                        name="urise"
+                      >
+                        12
+                      </Radio>
+                      <Radio
+                        value="13"
+                        onChange={handleurise}
+                        name="urise"
+                      >
+                        13
+                      </Radio>
+                      <Radio
+                        value="14"
+                        onChange={handleurise}
+                        name="urise"
+                      >
+                        14
+                      </Radio>
+                      <Radio
+                        value="15"
+                        onChange={handleurise}
+                        name="urise"
+                      >
                         15
                       </Radio>
                     </Stack>

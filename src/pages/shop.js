@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Center,
@@ -12,6 +12,7 @@ import {
 import Header from "../Templates/header";
 import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
+import { MyCart } from "./Store/Context";
 
 const query = graphql`
   {
@@ -32,8 +33,12 @@ const query = graphql`
 
 function Shop() {
   const data = useStaticQuery(query);
-  console.log(data.allWcProducts.nodes);
+  //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
+
+  const cart = useContext(MyCart);
+  console.log(cart);
+
   return (
     <>
       <Header />

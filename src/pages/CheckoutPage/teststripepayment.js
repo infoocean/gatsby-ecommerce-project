@@ -1,70 +1,140 @@
+import { navigate } from "gatsby";
 import React from "react";
-import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import StripeCheckout from "react-stripe-checkout";
+import { api } from "../../API/API";
 import Header from "../../Templates/header";
-const buttonStyles = {
-  fontSize: "13px",
-  textAlign: "center",
-  color: "#000",
-  padding: "12px 60px",
-  boxShadow: "2px 5px 10px rgba(0,0,0,.1)",
-  backgroundColor: "rgb(255, 178, 56)",
-  borderRadius: "6px",
-  letterSpacing: "1.5px",
-};
 
-const buttonDisabledStyles = {
-  opacity: "0.5",
-  cursor: "not-allowed",
-};
-let stripePromise;
-const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(
-      "pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
-    );
-  }
-  return stripePromise;
-};
+function StripeCheckouts() {
+  const onToken = (token, address) => {
+    //console.log(token, address);
+    const data = { token, address, ammount: 100 };
+    //console.log(data);
+    //return false;
+    fetch("http://localhost:4000/stripe-payment-integration", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        //console.log(data);
 
-function StripeCheckout() {
-  const [loading, setLoading] = useState(false);
-  const redirectToCheckout = async (event) => {
-    event.preventDefault();
-    setLoading(true);
+        if (data && data.status === "succeeded") {
+          const tnx_id = localStorage.setItem(
+            "tnx_id",
+            data.charges.data[0].balance_transaction
+          );
+          const receipt = localStorage.setItem(
+            "receipt",
+            data.charges.data[0].receipt_url
+          );
+          const newcreateorder = {
+            payment_method: data.payment_method_types[0],
+            payment_method_title: data.description,
+            set_paid: true,
+            billing: {
+              first_name: data.shipping.name,
+              address_1: data.shipping.address.line1,
+              address_2: "",
+              city: data.shipping.address.city,
+              state: data.shipping.address.state,
+              postcode: data.shipping.address.postal_code,
+              country: data.shipping.address.country,
+              email: "sj2585097@gmail.com",
+              phone: "9131649079",
+            },
+            shipping: {
+              first_name: data.shipping.name,
+              address_1: data.shipping.address.line1,
+              address_2: "",
+              city: data.shipping.address.city,
+              state: data.shipping.address.state,
+              postcode: data.shipping.address.postal_code,
+              country: data.shipping.address.country,
+            },
+            line_items: [
+              {
+                product_id: 10,
+                quantity: 1,
+              },
+            ],
+            shipping_lines: [
+              {
+                method_id: data.charges.data[0].balance_transaction,
+                method_title: "Flat Rate",
+                total: 100,
+              },
+            ],
+          };
+          //console.log("new create order^^^^^^^", newcreateorder);
 
-    const stripe = await getStripe();
-    const { error } = await stripe.redirectToCheckout({
-      mode: "payment",
-      lineItems: [{ price: "price_1LsJcmLVp3cdDpUhrxQ6emYN", quantity: 1 }],
-      successUrl: `http://localhost:8000/CheckoutPage/success/`,
-      cancelUrl: `http://localhost:8000/`,
-    });
+          api
+            .post("orders", newcreateorder)
+            .then((response) => {
+              //console.log(response.data);
+              if (response.data && response.data.id > 0) {
+                const data = {
+                  status: "completed",
+                };
+                api
+                  .put(`orders/${response.data.id}`, data)
+                  .then((response) => {
+                    //console.log(response.data);
+                  })
+                  .catch((error) => {
+                    //console.log(error.response.data);
+                  });
 
-    if (error) {
-      console.warn("Error:", error);
-      setLoading(false);
-    }
+                navigate(`/success/${response.data.id}`);
+              }
+            })
+            .catch((error) => {
+              //console.log(error.response.data);
+            });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   return (
     <>
       <Header />
-      <div style={{ marginTop: "15%", marginLeft: "40%" }}>
+      <StripeCheckout
+        name={"Securly Payment"}
+        description="Big Data Stuff"
+        image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
+        //panelLabel="Give Money"
+        amount="100"
+        currency="USD"
+        stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
+        locale="India"
+        token={onToken}
+        email=""
+        shippingAddress
+        billingAddress
+        //zipCode={true}
+        //allowRememberMe={true}
+      >
         <button
-          disabled={loading}
-          style={
-            loading
-              ? { ...buttonStyles, ...buttonDisabledStyles }
-              : buttonStyles
-          }
-          onClick={redirectToCheckout}
+          style={{
+            layout: "horizontal",
+            fontSize: "17px",
+            fontWeight: "bold",
+            width: "30%",
+            marginTop: "200px",
+            marginLeft: "500px",
+          }}
+          class="btn btn-primary text-center"
         >
-          <b>Pay With Card</b>
+          Pay With Card Stripe Payment
         </button>
-      </div>
+      </StripeCheckout>
     </>
   );
 }
 
-export default StripeCheckout;
+export default StripeCheckouts;
