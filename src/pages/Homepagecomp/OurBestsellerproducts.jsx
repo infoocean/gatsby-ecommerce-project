@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Box,
   Center,
@@ -56,16 +56,8 @@ function BestsellerProducts() {
           </Stack>
           <SimpleGrid columns={[1, null, 3]} spacing="40px">
             {mydata.slice(0, 8).map((item, key) => {
-              const {
-                name,
-                images,
-                price,
-                description,
-                slug,
-                regular_price,
-                sale_price,
-                categories,
-              } = item;
+              const { name, images, price, description, slug, categories } =
+                item;
               return (
                 <Box>
                   <Center py={2}>

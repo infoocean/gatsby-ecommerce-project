@@ -24,14 +24,11 @@ function StripeCheckouts() {
         //console.log(data);
 
         if (data && data.status === "succeeded") {
-          const tnx_id = localStorage.setItem(
+          localStorage.setItem(
             "tnx_id",
             data.charges.data[0].balance_transaction
           );
-          const receipt = localStorage.setItem(
-            "receipt",
-            data.charges.data[0].receipt_url
-          );
+          localStorage.setItem("receipt", data.charges.data[0].receipt_url);
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
             payment_method_title: data.description,

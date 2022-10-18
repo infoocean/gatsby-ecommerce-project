@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import Header from "../../Templates/header";
 
 function CheckoutPage() {
-  const [formdata, setformdata] = useState({});
   return (
     <>
       <Header />
