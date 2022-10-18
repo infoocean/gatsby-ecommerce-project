@@ -6,6 +6,7 @@ import {
   Heading,
   Image,
   Modal,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
@@ -27,6 +28,211 @@ import {
 import Header from "../../Templates/header";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import slugify from "slugify";
+
+const jacket_data = [
+  {
+    labelname: "Front Waist Height",
+    labelinfo: {
+      name: "Front_Waist_Height",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Back length",
+    labelinfo: {
+      name: "Back_length",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Stomach",
+    labelinfo: {
+      name: "Stomach",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Neck",
+    labelinfo: {
+      name: "Neck",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Back waist height",
+    labelinfo: {
+      name: "Back_waist_height",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Waist",
+    labelinfo: {
+      name: "Waist",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: " Front Shoulder",
+    labelinfo: {
+      name: "Front_Shoulder",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Bicep",
+    labelinfo: {
+      name: "Bicep",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Nape to waist",
+    labelinfo: {
+      name: "Nape_to_waist",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "SleaveL",
+    labelinfo: {
+      name: "SleaveL",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "SleaveR",
+    labelinfo: {
+      name: "SleaveR",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Seat",
+    labelinfo: {
+      name: "Seat",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Shoulder",
+    labelinfo: {
+      name: "Shoulder",
+      val: [12, 13, 14, 15],
+    },
+  },
+
+  {
+    labelname: "Chest",
+    labelinfo: {
+      name: "Chest",
+      val: [12, 13, 14, 15],
+    },
+  },
+];
+const trouser_data = [
+  {
+    labelname: "U-rise",
+    labelinfo: {
+      name: "U_rise",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Calf girth",
+    labelinfo: {
+      name: "Calf_girth",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Front Waist Length",
+    labelinfo: {
+      name: "Front_Waist_Length",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Wrist(R)",
+    labelinfo: {
+      name: "WristR",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Back waist height",
+    labelinfo: {
+      name: "Back_waist_eight",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Wrist(L)",
+    labelinfo: {
+      name: "WristL",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: " Knee(Finished)",
+    labelinfo: {
+      name: "KneeFinished",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Waist",
+    labelinfo: {
+      name: "Waist",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Vest Back Length(Finished)",
+    labelinfo: {
+      name: "Vest_Back_LengthFinished",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Thigh",
+    labelinfo: {
+      name: "Thigh",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Front Waist Height",
+    labelinfo: {
+      name: "Front_Waist_Height",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Outseam (L)",
+    labelinfo: {
+      name: "OutseamL",
+      val: [12, 13, 14, 15],
+    },
+  },
+  {
+    labelname: "Pant Bottom(Finished)",
+    labelinfo: {
+      name: "PantBottomFinished",
+      val: [12, 13, 14, 15],
+    },
+  },
+
+  {
+    labelname: "Outseam (R)",
+    labelinfo: {
+      name: "OutseamR",
+      val: [12, 13, 14, 15],
+    },
+  },
+];
+
+//console.log(jacket_data,trouser_data);
 
 export const query = graphql`
   query ($slug: String) {
@@ -54,6 +260,7 @@ export const query = graphql`
 function Shop({ data }) {
   //console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpencart, setisOpencart] = useState(false);
   //const mydata = useStaticQuery(query);
   //console.log(mydata.wcProducts);
   //console.log(data.wcProducts);
@@ -61,10 +268,7 @@ function Shop({ data }) {
   //console.log(myproductdet);
   const slugTitle = slugify(myproductdet.slug, { lower: true });
   const [cart, setcart] = useState([]);
-
-  function submitjacketsize(e) {
-    //alert(e.target.name);
-  }
+  console.log(cart);
 
   let mytrouserdata = [];
   function handltrouser(e) {
@@ -81,16 +285,26 @@ function Shop({ data }) {
     myjacketdata[e.target.name] = e.target.value;
     //console.log(myjacketdata);
   }
-
+  function handlejacketdata(e) {
+    console.log("myjacketdata", myjacketdata);
+  }
   function handletrouserdata(e) {
     console.log("myjacketdata", myjacketdata, "mytrouserdata", myjacketdata);
+  }
+
+  function setisOpenmycart() {
+    setisOpencart(true);
   }
 
   return (
     <>
       {/*header component*/}
       <Header cart={cart} />
-      {/*product det component*/}
+
+      <Button onClick={setisOpenmycart} style={{ color: "blue" }} ml={8} mt={3}>
+        cart({cart ? cart.length : 0})
+      </Button>
+
       <Container maxW={"5xl"} py={12}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
           <Stack spacing={4}>
@@ -169,7 +383,7 @@ function Shop({ data }) {
           </Flex>
         </SimpleGrid>
       </Container>
-      {/*my model component*/}
+      {/*my model select size component*/}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -184,181 +398,64 @@ function Shop({ data }) {
             <TabPanels>
               <TabPanel>
                 <Stack>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Front Waist Height</Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio
-                        value="12"
-                        name="front_weist_height"
-                        onChange={handljacket}
-                      >
-                        12
-                      </Radio>
-                      <Radio
-                        value="13"
-                        name="frontweistheight"
-                        onChange={handljacket}
-                      >
-                        13
-                      </Radio>
-                      <Radio
-                        value="14"
-                        name="frontweistheight"
-                        onChange={handljacket}
-                      >
-                        14
-                      </Radio>
-                      <Radio
-                        value="15"
-                        name="frontweistheight"
-                        onChange={handljacket}
-                      >
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Back length </Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio
-                        value="12"
-                        name="back_length"
-                        onChange={handljacket}
-                      >
-                        12
-                      </Radio>
-                      <Radio
-                        value="13"
-                        name="back_length"
-                        onChange={handljacket}
-                      >
-                        13
-                      </Radio>
-                      <Radio
-                        value="14"
-                        name="back_length"
-                        onChange={handljacket}
-                      >
-                        14
-                      </Radio>
-                      <Radio
-                        value="15"
-                        name="back_length"
-                        onChange={handljacket}
-                      >
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Stomach </Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio value="12" name="stomach " onChange={handljacket}>
-                        12
-                      </Radio>
-                      <Radio value="13" name="stomach" onChange={handljacket}>
-                        13
-                      </Radio>
-                      <Radio value="14" name="stomach" onChange={handljacket}>
-                        14
-                      </Radio>
-                      <Radio value="15" name="stomach" onChange={handljacket}>
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
+                  {jacket_data.map((data, key) => {
+                    return (
+                      <RadioGroup>
+                        <Text fontSize="1xl">{data.labelname}</Text>
+                        <Stack direction="row" mt={1}>
+                          {data &&
+                            data.labelinfo &&
+                            data.labelinfo.val.map((val, key) => {
+                              return (
+                                <Radio
+                                  value={val}
+                                  name={
+                                    data &&
+                                    data.labelinfo &&
+                                    data.labelinfo.name
+                                  }
+                                  onChange={handljacket}
+                                >
+                                  {val}
+                                </Radio>
+                              );
+                            })}
+                        </Stack>
+                      </RadioGroup>
+                    );
+                  })}
                 </Stack>
                 <ModalFooter>
-                  <Button colorScheme="blue" mr={3} onClick={submitjacketsize}>
+                  <Button colorScheme="blue" mr={3} onClick={handlejacketdata}>
                     Submit Jacket Size
                   </Button>
                 </ModalFooter>
               </TabPanel>
               <TabPanel>
                 <Stack>
-                  <RadioGroup>
-                    <Text fontSize="1xl">U-rise</Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio value="12" onChange={handltrouser} name="urise">
-                        12
-                      </Radio>
-                      <Radio value="13" onChange={handltrouser} name="urise">
-                        13
-                      </Radio>
-                      <Radio value="14" onChange={handltrouser} name="urise">
-                        14
-                      </Radio>
-                      <Radio value="15" onChange={handltrouser} name="urise">
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Calf girth</Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio
-                        value="12"
-                        onChange={handltrouser}
-                        name="calf_girth"
-                      >
-                        12
-                      </Radio>
-                      <Radio
-                        value="13"
-                        onChange={handltrouser}
-                        name="calf_girth"
-                      >
-                        13
-                      </Radio>
-                      <Radio
-                        value="14"
-                        onChange={handltrouser}
-                        name="calf_girth"
-                      >
-                        14
-                      </Radio>
-                      <Radio
-                        value="15"
-                        onChange={handltrouser}
-                        name="calf_girth"
-                      >
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                  <RadioGroup>
-                    <Text fontSize="1xl">Front Waist Length</Text>
-                    <Stack direction="row" mt={1}>
-                      <Radio
-                        value="12"
-                        onChange={handltrouser}
-                        name="front_waist_length"
-                      >
-                        12
-                      </Radio>
-                      <Radio
-                        value="13"
-                        onChange={handltrouser}
-                        name="front_waist_length"
-                      >
-                        13
-                      </Radio>
-                      <Radio
-                        value="14"
-                        onChange={handltrouser}
-                        name="front_waist_length"
-                      >
-                        14
-                      </Radio>
-                      <Radio
-                        value="15"
-                        onChange={handltrouser}
-                        name="front_waist_length"
-                      >
-                        15
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
+                  {trouser_data.map((trtouseritem, key) => {
+                    return (
+                      <RadioGroup>
+                        <Text fontSize="1xl">{trtouseritem.labelname}</Text>
+                        <Stack direction="row" mt={1}>
+                          {trtouseritem &&
+                            trtouseritem.labelinfo &&
+                            trtouseritem.labelinfo.val.map((tval, key) => {
+                              return (
+                                <Radio
+                                  value={tval}
+                                  onChange={handltrouser}
+                                  name={trtouseritem.labelinfo.name}
+                                >
+                                  {tval}
+                                </Radio>
+                              );
+                            })}
+                        </Stack>
+                      </RadioGroup>
+                    );
+                  })}
+
                   <ModalFooter>
                     <Button
                       colorScheme="blue"
@@ -374,6 +471,22 @@ function Shop({ data }) {
           </Tabs>
         </ModalContent>
       </Modal>
+      {/*my model cart component*/}
+
+      {isOpencart && (
+        <Modal>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Modal Title</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text fontWeight="bold" mb="1rem">
+                You can scroll the content behind the modal
+              </Text>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }
