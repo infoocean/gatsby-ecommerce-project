@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import api from "../../API/Woocommerceapi";
+
 import "../../assets/style.css";
 
 function Orders() {
+  const order_id = localStorage.getItem("order_id");
+  const tnx_id = localStorage.getItem("tnx_id");
+  const receipt = localStorage.getItem("receipt");
+
+  const [orderdet, setorderdet] = useState([]);
+
+  api
+    .get(`orders/${order_id}`)
+    .then((response) => {
+      //console.log(response.data);
+      setorderdet(response.data);
+    })
+    .catch((error) => {
+      console.log(error.response.data);
+    });
+
+  console.log(orderdet);
+
   return (
     <>
       <div
@@ -11,10 +31,13 @@ function Orders() {
         <div class="text-uppercase">
           <p>Order detail</p>
         </div>
-        <div class="h4">Tuesday, December 08, 2020</div>
+        <div class="h4">
+          Tuesday, December {orderdet && orderdet.date_completed}
+        </div>
         <div class="pt-1">
           <p>
-            Order #12615 is <b class="text-dark"> Completed</b>
+            Order {orderdet && orderdet.order_key} is{" "}
+            <b class="text-dark"> {orderdet && orderdet.status}</b>
           </p>
         </div>
       </div>
@@ -33,13 +56,13 @@ function Orders() {
               <tr>
                 <th scope="row">Babyblends: 1meal/day</th>
                 <td class="text-right">
-                  <b>$69.86</b>
+                  <b>{orderdet && orderdet.total}</b>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="d-flex justify-content-start align-items-center list py-1">
+        {/* <div class="d-flex justify-content-start align-items-center list py-1">
           <div class="mx-3">
             {" "}
             <img
@@ -50,8 +73,27 @@ function Orders() {
             />{" "}
           </div>
           <div class="order-item">Apple</div>
+        </div> */}
+        <div class="row border rounded p-1 my-3">
+          <div class="col-md-6 py-3">
+            <div class="d-flex flex-column align-items start">
+              {" "}
+              <b>Tranaction Id</b>
+              <p class="text-justify pt-2">{tnx_id}</p>
+            </div>
+          </div>
+          <div class="col-md-6 py-3">
+            <div class="d-flex flex-column align-items start">
+              {" "}
+              <b>Invoice</b>
+              <p class="text-justify pt-2">
+                <a href={receipt} target="__blank">
+                  Get Payment Invoice
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
-
         <div class="row border rounded p-1 my-3">
           <div class="col-md-6 py-3">
             <div class="d-flex flex-column align-items start">

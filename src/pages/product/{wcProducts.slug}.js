@@ -59,27 +59,31 @@ function Shop({ data }) {
   //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
   //console.log(myproductdet);
-  function submitjacketsize(e) {
-    alert(e.target.name);
-  }
-  const [trouserdata, settrouserdata] = useState([]);
+  const slugTitle = slugify(myproductdet.slug, { lower: true });
   const [cart, setcart] = useState([]);
 
-  let mytrouserdata = [];
-  function handleurise(e) {
-    alert(e.target.value);
-    alert(e.target.name);
+  function submitjacketsize(e) {
+    //alert(e.target.name);
   }
-  // function handleurise(e) {
-  //   alert(e.target.value);
-  // }
-  // function handleurise(e) {
-  //   alert(e.target.value);
-  // }
+
+  let mytrouserdata = [];
+  function handltrouser(e) {
+    //alert(e.target.value);
+    //alert(e.target.name);
+    mytrouserdata[e.target.name] = e.target.value;
+    //console.log(mytrouserdata);
+  }
+
+  let myjacketdata = [];
+  function handljacket(e) {
+    //alert(e.target.value);
+    //alert(e.target.name);
+    myjacketdata[e.target.name] = e.target.value;
+    //console.log(myjacketdata);
+  }
 
   function handletrouserdata(e) {
-    
-    console.log(mytrouserdata);
+    console.log("myjacketdata", myjacketdata, "mytrouserdata", myjacketdata);
   }
 
   return (
@@ -119,14 +123,7 @@ function Shop({ data }) {
                 _hover={{ bg: "orange.500" }}
                 px={6}
               >
-                <Link
-                  to={`/CheckoutPage/product/${slugify(myproductdet.slug, {
-                    lower: true,
-                  })}`}
-                >
-                  {" "}
-                  Buy Now
-                </Link>
+                <Link to={`/productbyslug/${slugTitle}`}>Buy Now</Link>
               </Button>
 
               <Button
@@ -190,16 +187,82 @@ function Shop({ data }) {
                   <RadioGroup>
                     <Text fontSize="1xl">Front Waist Height</Text>
                     <Stack direction="row" mt={1}>
-                      <Radio value="12" name="frontweistheight">
+                      <Radio
+                        value="12"
+                        name="front_weist_height"
+                        onChange={handljacket}
+                      >
                         12
                       </Radio>
-                      <Radio value="13" name="frontweistheight">
+                      <Radio
+                        value="13"
+                        name="frontweistheight"
+                        onChange={handljacket}
+                      >
                         13
                       </Radio>
-                      <Radio value="14" name="frontweistheight">
+                      <Radio
+                        value="14"
+                        name="frontweistheight"
+                        onChange={handljacket}
+                      >
                         14
                       </Radio>
-                      <Radio value="15" name="frontweistheight">
+                      <Radio
+                        value="15"
+                        name="frontweistheight"
+                        onChange={handljacket}
+                      >
+                        15
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                  <RadioGroup>
+                    <Text fontSize="1xl">Back length </Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio
+                        value="12"
+                        name="back_length"
+                        onChange={handljacket}
+                      >
+                        12
+                      </Radio>
+                      <Radio
+                        value="13"
+                        name="back_length"
+                        onChange={handljacket}
+                      >
+                        13
+                      </Radio>
+                      <Radio
+                        value="14"
+                        name="back_length"
+                        onChange={handljacket}
+                      >
+                        14
+                      </Radio>
+                      <Radio
+                        value="15"
+                        name="back_length"
+                        onChange={handljacket}
+                      >
+                        15
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                  <RadioGroup>
+                    <Text fontSize="1xl">Stomach </Text>
+                    <Stack direction="row" mt={1}>
+                      <Radio value="12" name="stomach " onChange={handljacket}>
+                        12
+                      </Radio>
+                      <Radio value="13" name="stomach" onChange={handljacket}>
+                        13
+                      </Radio>
+                      <Radio value="14" name="stomach" onChange={handljacket}>
+                        14
+                      </Radio>
+                      <Radio value="15" name="stomach" onChange={handljacket}>
                         15
                       </Radio>
                     </Stack>
@@ -216,16 +279,16 @@ function Shop({ data }) {
                   <RadioGroup>
                     <Text fontSize="1xl">U-rise</Text>
                     <Stack direction="row" mt={1}>
-                      <Radio value="12" onChange={handleurise} name="urise">
+                      <Radio value="12" onChange={handltrouser} name="urise">
                         12
                       </Radio>
-                      <Radio value="13" onChange={handleurise} name="urise">
+                      <Radio value="13" onChange={handltrouser} name="urise">
                         13
                       </Radio>
-                      <Radio value="14" onChange={handleurise} name="urise">
+                      <Radio value="14" onChange={handltrouser} name="urise">
                         14
                       </Radio>
-                      <Radio value="15" onChange={handleurise} name="urise">
+                      <Radio value="15" onChange={handltrouser} name="urise">
                         15
                       </Radio>
                     </Stack>
@@ -233,16 +296,32 @@ function Shop({ data }) {
                   <RadioGroup>
                     <Text fontSize="1xl">Calf girth</Text>
                     <Stack direction="row" mt={1}>
-                      <Radio value="12" onChange={handleurise} name="urise">
+                      <Radio
+                        value="12"
+                        onChange={handltrouser}
+                        name="calf_girth"
+                      >
                         12
                       </Radio>
-                      <Radio value="13" onChange={handleurise} name="urise">
+                      <Radio
+                        value="13"
+                        onChange={handltrouser}
+                        name="calf_girth"
+                      >
                         13
                       </Radio>
-                      <Radio value="14" onChange={handleurise} name="urise">
+                      <Radio
+                        value="14"
+                        onChange={handltrouser}
+                        name="calf_girth"
+                      >
                         14
                       </Radio>
-                      <Radio value="15" onChange={handleurise} name="urise">
+                      <Radio
+                        value="15"
+                        onChange={handltrouser}
+                        name="calf_girth"
+                      >
                         15
                       </Radio>
                     </Stack>
@@ -252,29 +331,29 @@ function Shop({ data }) {
                     <Stack direction="row" mt={1}>
                       <Radio
                         value="12"
-                        onChange={handleurise}
-                        name="urise"
+                        onChange={handltrouser}
+                        name="front_waist_length"
                       >
                         12
                       </Radio>
                       <Radio
                         value="13"
-                        onChange={handleurise}
-                        name="urise"
+                        onChange={handltrouser}
+                        name="front_waist_length"
                       >
                         13
                       </Radio>
                       <Radio
                         value="14"
-                        onChange={handleurise}
-                        name="urise"
+                        onChange={handltrouser}
+                        name="front_waist_length"
                       >
                         14
                       </Radio>
                       <Radio
                         value="15"
-                        onChange={handleurise}
-                        name="urise"
+                        onChange={handltrouser}
+                        name="front_waist_length"
                       >
                         15
                       </Radio>

@@ -1,7 +1,7 @@
 import { navigate } from "gatsby";
 import React from "react";
 import StripeCheckout from "react-stripe-checkout";
-import { api } from "../../API/API";
+import api from "../../API/Woocommerceapi";
 import Header from "../../Templates/header";
 
 function StripeCheckouts() {
@@ -66,7 +66,7 @@ function StripeCheckouts() {
               {
                 method_id: data.charges.data[0].balance_transaction,
                 method_title: "Flat Rate",
-                total: 100,
+                total: "100",
               },
             ],
           };
@@ -88,8 +88,8 @@ function StripeCheckouts() {
                   .catch((error) => {
                     //console.log(error.response.data);
                   });
-
-                navigate(`/success/${response.data.id}`);
+                localStorage.setItem("order_id", response.data.id);
+                navigate(`/CheckoutPage/success`);
               }
             })
             .catch((error) => {
