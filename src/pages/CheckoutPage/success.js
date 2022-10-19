@@ -3,10 +3,12 @@ import React from "react";
 import "../../assets/style.css";
 import { AiOutlineCheck } from "react-icons/ai";
 import { Link } from "gatsby";
+import Header from "../../Templates/header";
 
 function SuccessPage() {
   return (
     <>
+      <Header />
       <div class="container">
         <div class="row">
           <div class="col-md-6 mx-auto mt-5">
