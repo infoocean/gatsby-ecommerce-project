@@ -13,9 +13,6 @@ import { HiRefresh } from "react-icons/hi";
 import { IoArrowRedoSharp, IoArrowUndoSharp } from "react-icons/io5";
 import Header from "../../Templates/header";
 
-import "@popperjs/core/dist/umd/popper.min";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min";
 import { Link } from "gatsby";
 import { MyCart } from "../Store/Context";
 
