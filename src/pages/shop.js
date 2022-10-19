@@ -13,6 +13,7 @@ import Header from "../Templates/header";
 import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { MyCart } from "./Store/Context";
+import { Button } from "bootstrap";
 
 const query = graphql`
   {
@@ -36,8 +37,8 @@ function Shop() {
   //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
 
-  const cart = useContext(MyCart);
-  console.log(cart);
+  const { cart, setcart } = useContext(MyCart);
+  //console.log(cart);
 
   return (
     <>
@@ -77,6 +78,12 @@ function Shop() {
                         {description.replace(/(<([^>]+)>)/gi, "")}
                       </Text>
                       <Text color={"gray.500"}>${price}</Text>
+                      <Button
+                        colorScheme="orange"
+                        onClick={() => setcart([...cart, item])}
+                      >
+                        add to cart
+                      </Button>
                     </Stack>
                   </Box>
                 </Center>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "gatsby";
 import {
   Box,
@@ -7,7 +7,6 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { MyCart } from "../pages/Store/Context";
 
 const Logo = () => {
   return (
@@ -25,14 +24,6 @@ const Logo = () => {
 };
 
 function Header(props) {
-  // const { cart } = useContext(MyCart);
-
-  if (props.cart) {
-    var cart = props.cart;
-  } else {
-    var cart = 0;
-  }
-  // console.log(cart);
   return (
     <>
       {/*header navbar start*/}
@@ -72,9 +63,7 @@ function Header(props) {
               href={"#"}
             >
               <Link to="/cart/productcartdet" style={{ marginRight: "20px" }}>
-                <b>
-                  Cart<sup>{cart && cart.length}</sup>
-                </b>
+                <b>{/* Cart<sup>{cart && cart.length}</sup> */}</b>
               </Link>
             </Button>
             <Button

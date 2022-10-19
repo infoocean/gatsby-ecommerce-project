@@ -267,8 +267,6 @@ function Shop({ data }) {
   const myproductdet = data.wcProducts;
   //console.log(myproductdet);
   const slugTitle = slugify(myproductdet.slug, { lower: true });
-  const [cart, setcart] = useState([]);
-  console.log(cart);
 
   let mytrouserdata = [];
   function handltrouser(e) {
@@ -299,12 +297,7 @@ function Shop({ data }) {
   return (
     <>
       {/*header component*/}
-      <Header cart={cart} />
-
-      <Button onClick={setisOpenmycart} style={{ color: "blue" }} ml={8} mt={3}>
-        cart({cart ? cart.length : 0})
-      </Button>
-
+      <Header />
       <Container maxW={"5xl"} py={12}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
           <Stack spacing={4}>
@@ -327,7 +320,7 @@ function Shop({ data }) {
                 colorScheme={"orange"}
                 bg={"blue.400"}
                 _hover={{ bg: "orange.500" }}
-                onClick={() => setcart([...cart, myproductdet])}
+                // onClick={() => setcart([...cart, myproductdet])}
               >
                 Add To Cart
               </Button>

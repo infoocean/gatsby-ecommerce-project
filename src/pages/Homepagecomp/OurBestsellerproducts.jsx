@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Center,
@@ -44,7 +44,7 @@ function BestsellerProducts() {
   const mydata = data.allWcProducts.nodes;
 
   // const { cart, setcart } = useContext(MyCart);
-  // console.log(cart);
+  // //console.log(cart);
 
   return (
     <>

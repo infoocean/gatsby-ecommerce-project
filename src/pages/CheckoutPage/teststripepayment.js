@@ -10,13 +10,16 @@ function StripeCheckouts() {
     const data = { token, address, ammount: 100 };
     //console.log(data);
     //return false;
-    fetch("http://localhost:4000/stripe-payment-integration", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
+    fetch(
+      "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    )
       .then(function (response) {
         return response.json();
       })
