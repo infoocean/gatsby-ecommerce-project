@@ -13,7 +13,6 @@ import {
 import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { cartContext } from "../Store/GlobalContextProvider";
-
 const query = graphql`
   {
     allWcProducts {
@@ -23,6 +22,9 @@ const query = graphql`
         images {
           src
         }
+        categories {
+          name
+        }
         name
         price
         slug
@@ -30,21 +32,16 @@ const query = graphql`
     }
   }
 `;
-
 function Shopcomp() {
   const data = useStaticQuery(query);
-  //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
-
   const { cart, setcart } = useContext(cartContext);
-  console.log(cart);
-
   return (
     <>
       <Container maxW={"7xl"} mt={8} mb={8}>
         <SimpleGrid columns={[1, null, 3]} spacing="40px">
           {mydata.slice(0, 8).map((item, key) => {
-            const { name, images, price, description, slug } = item;
+            const { name, images, price, description, categories, slug } = item;
             const slugTitle = slugify(slug, { lower: true });
             return (
               <Box>
@@ -70,17 +67,37 @@ function Shopcomp() {
                       <Heading fontSize={"2xl"} fontFamily={"body"} mt={1}>
                         {name}
                       </Heading>
-                      <Text color={"gray.500"}>{}</Text>
-                      <Text color={"gray.500"}>
-                        {description.replace(/(<([^>]+)>)/gi, "")}
-                      </Text>
-                      <Text color={"gray.500"}>${price}</Text>
-                      <Button
-                        colorScheme="orange"
-                        onClick={() => setcart([...cart, item])}
-                      >
-                        add to cart
-                      </Button>
+
+                      {description ? (
+                        <Text color={"gray.500"}>
+                          {description.replace(/(<([^>]+)>)/gi, "")}
+                        </Text>
+                      ) : (
+                        ""
+                      )}
+                      {categories ? (
+                        <Text color={"gray.500"}>
+                          Categories:{" "}
+                          {categories && categories[0] && categories[0].name}
+                        </Text>
+                      ) : (
+                        ""
+                      )}
+                      {price ? (
+                        <Text color={"gray.500"}>Price: ${price}</Text>
+                      ) : (
+                        ""
+                      )}
+                      {price ? (
+                        <Button
+                          colorScheme="orange"
+                          onClick={() => setcart([...cart, item])}
+                        >
+                          add to cart
+                        </Button>
+                      ) : (
+                        <Button colorScheme="orange">add to cart</Button>
+                      )}
                     </Stack>
                   </Box>
                 </Center>

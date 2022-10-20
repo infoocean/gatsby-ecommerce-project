@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { cartContext } from "../Store/GlobalContextProvider";
-
 const query = graphql`
   {
     allWcProducts {
@@ -37,15 +36,10 @@ const query = graphql`
     }
   }
 `;
-
 function BestsellerProducts() {
   const data = useStaticQuery(query);
-  //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
-
   const { cart, setcart } = useContext(cartContext);
-  console.log(cart);
-
   return (
     <>
       <Box>
@@ -59,7 +53,7 @@ function BestsellerProducts() {
               const { name, images, price, description, slug, categories } =
                 item;
               return (
-                <Box>
+                <Box key={key}>
                   <Center py={2}>
                     <Box
                       maxW={"445px"}
@@ -82,26 +76,38 @@ function BestsellerProducts() {
                         <Heading fontSize={"2xl"} fontFamily={"body"} mt={1}>
                           {name}
                         </Heading>
-                        <Text color={"gray.500"}>
-                          {description.replace(/(<([^>]+)>)/gi, "")}
-                        </Text>
-                        <Text color={"gray.500"}>
-                          Categories:{" "}
-                          {categories && categories[0] && categories[0].name}
-                        </Text>
-                        {/* <Text color={"gray.500"}>
-                          Reg Price: ${regular_price}
-                        </Text>
-                        <Text color={"gray.500"}>
-                          Sale Price: ${sale_price}
-                        </Text> */}
-                        <Text color={"gray.500"}>Price: ${price}</Text>
-                        <Button
-                          colorScheme="orange"
-                          onClick={() => setcart([...cart, item])}
-                        >
-                          add to cart
-                        </Button>
+                        {description ? (
+                          <Text color={"gray.500"}>
+                            {description.replace(/(<([^>]+)>)/gi, "")}
+                          </Text>
+                        ) : (
+                          ""
+                        )}
+                        {categories ? (
+                          <Text color={"gray.500"}>
+                            Categories:{" "}
+                            {categories && categories[0] && categories[0].name}
+                          </Text>
+                        ) : (
+                          ""
+                        )}
+
+                        {price ? (
+                          <Text color={"gray.500"}>Price: ${price}</Text>
+                        ) : (
+                          ""
+                        )}
+
+                        {price ? (
+                          <Button
+                            colorScheme="orange"
+                            onClick={() => setcart([...cart, item])}
+                          >
+                            add to cart
+                          </Button>
+                        ) : (
+                          <Button colorScheme="orange">add to cart</Button>
+                        )}
                       </Stack>
                     </Box>
                   </Center>
@@ -114,5 +120,4 @@ function BestsellerProducts() {
     </>
   );
 }
-
 export default BestsellerProducts;

@@ -59,7 +59,6 @@ export default function LoginForm() {
 
   return (
     <>
-      <Layout />
       <Flex
         align={"center"}
         justify={"center"}
@@ -136,7 +135,7 @@ export default function LoginForm() {
               <Stack pt={1}>
                 <Text align={"center"}>
                   New user?{" "}
-                  <Link to="/auth/signup">
+                  <Link to="/registrationpage">
                     <Text as={"span"} color={"blue.400"}>
                       Signup
                     </Text>

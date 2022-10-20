@@ -231,7 +231,6 @@ const trouser_data = [
     },
   },
 ];
-
 //console.log(jacket_data,trouser_data);
 
 export const query = graphql`
@@ -260,7 +259,6 @@ export const query = graphql`
 function Shop({ data }) {
   //console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   //const mydata = useStaticQuery(query);
   //console.log(mydata.wcProducts);
   //console.log(data.wcProducts);
@@ -269,7 +267,7 @@ function Shop({ data }) {
   const slugTitle = slugify(myproductdet.slug, { lower: true });
 
   const { cart, setcart } = useContext(cartContext);
-  console.log(cart);
+  //console.log(cart);
 
   let mytrouserdata = [];
   function handltrouser(e) {
@@ -309,26 +307,55 @@ function Shop({ data }) {
             >
               Grey Classic
             </Text>
-            <Text>Price : ${myproductdet.price}</Text>
+
+            {myproductdet.price ? (
+              <Text>Price : ${myproductdet.price}</Text>
+            ) : (
+              ""
+            )}
+
             <Text>{myproductdet.name}</Text>
             <Stack spacing={6} direction={"row"}>
-              <Button
-                px={6}
-                colorScheme={"orange"}
-                bg={"blue.400"}
-                _hover={{ bg: "orange.500" }}
-                onClick={() => setcart([...cart, myproductdet])}
-              >
-                Add To Cart
-              </Button>
-              <Button
-                colorScheme={"orange"}
-                bg={"blue.400"}
-                _hover={{ bg: "orange.500" }}
-                px={6}
-              >
-                <Link to={`/productbyslug/${slugTitle}`}>Buy Now</Link>
-              </Button>
+              {myproductdet.price ? (
+                <Button
+                  px={6}
+                  colorScheme={"orange"}
+                  bg={"blue.400"}
+                  _hover={{ bg: "orange.500" }}
+                  onClick={() => setcart([...cart, myproductdet])}
+                >
+                  Add To Cart
+                </Button>
+              ) : (
+                <Button
+                  px={6}
+                  colorScheme={"orange"}
+                  bg={"blue.400"}
+                  _hover={{ bg: "orange.500" }}
+                >
+                  Add To Cart
+                </Button>
+              )}
+
+              {myproductdet.price ? (
+                <Button
+                  colorScheme={"orange"}
+                  bg={"blue.400"}
+                  _hover={{ bg: "orange.500" }}
+                  px={6}
+                >
+                  <Link to={`/productbyslug/${slugTitle}`}>Buy Now</Link>
+                </Button>
+              ) : (
+                <Button
+                  colorScheme={"orange"}
+                  bg={"blue.400"}
+                  _hover={{ bg: "orange.500" }}
+                  px={6}
+                >
+                  Buy Now
+                </Button>
+              )}
 
               <Button
                 colorScheme={"orange"}
@@ -352,7 +379,7 @@ function Shop({ data }) {
             </Stack>
             <Stack>
               <Heading fontSize={"2xl"} mt={5}>
-                Description
+                Description :
               </Heading>
               <Text>
                 {myproductdet.description.replace(/(<([^>]+)>)/gi, "")}

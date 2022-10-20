@@ -19,14 +19,12 @@ import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik } from "formik";
 import { Link } from "gatsby";
-import Layout from "../Layout";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
-      <Layout />
       <Flex
         minH={"100vh"}
         align={"center"}
@@ -361,7 +359,7 @@ export default function RegistrationForm() {
                     <Stack pt={1}>
                       <Text align={"center"}>
                         Already a user?{" "}
-                        <Link to="/auth/login">
+                        <Link to="/loginpage">
                           <Text as={"span"} color={"blue.400"}>
                             Login
                           </Text>

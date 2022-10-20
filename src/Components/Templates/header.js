@@ -77,7 +77,7 @@ function Header() {
               variant={"link"}
               href={"#"}
             >
-              <Link to="/auth/login">Sign In</Link>
+              <Link to="/loginpage">Sign In</Link>
             </Button>
             <Button
               display={{ base: "none", md: "inline-flex" }}
@@ -90,7 +90,7 @@ function Header() {
                 bg: "pink.300",
               }}
             >
-              <Link to="/auth/signup">Sign Up</Link>
+              <Link to="/registrationpage">Sign Up</Link>
             </Button>
           </Stack>
         </Container>

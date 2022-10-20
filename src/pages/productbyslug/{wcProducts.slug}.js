@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
-import { graphql, navigate, useStaticQuery } from "gatsby";
+import React from "react";
+import { graphql, navigate } from "gatsby";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
 import {
   Box,
-  Button,
-  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -13,13 +11,11 @@ import {
   HStack,
   Image,
   Input,
-  InputGroup,
   SimpleGrid,
   Stack,
   Text,
   Textarea,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import Layout from "../../Components/Layout";
 
@@ -47,12 +43,7 @@ export const query = graphql`
 `;
 
 function Shop({ data }) {
-  //console.log(data);
-  //const mydata = useStaticQuery(query);
-  //console.log(mydata.wcProducts);
-  //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
-  console.log(myproductdet);
 
   const onToken = (token, address) => {
     //console.log(token, address);
@@ -154,9 +145,9 @@ function Shop({ data }) {
   return (
     <>
       <Layout />
-      <div class="container  mt-5 mb-5">
+      <div class="container-fluid  mt-5 mb-5">
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-5">
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
               <Stack spacing={4}>
                 <Text
@@ -170,7 +161,11 @@ function Shop({ data }) {
                 >
                   Grey Classic
                 </Text>
-                <Text>Price : ${myproductdet.price}</Text>
+                {myproductdet.price ? (
+                  <Text>Price : ${myproductdet.price}</Text>
+                ) : (
+                  ""
+                )}
                 <Text>{myproductdet.name}</Text>
                 <Stack>
                   <Text>SKU : BLUEWYRSS21001-1-2-1-1</Text>
@@ -184,7 +179,7 @@ function Shop({ data }) {
                 </Stack>
                 <Stack>
                   <Heading fontSize={"2xl"} mt={5}>
-                    Description
+                    Description :
                   </Heading>
                   <Text>
                     {myproductdet.description.replace(/(<([^>]+)>)/gi, "")}
@@ -205,49 +200,73 @@ function Shop({ data }) {
               </Flex>
             </SimpleGrid>
           </div>
-          <div className="col-lg-6 ">
+          <div className="col-lg-7 ">
             <Box
               rounded={"lg"}
               bg={useColorModeValue("white", "gray.700")}
               boxShadow={"lg"}
               p={5}
             >
-              <Stack spacing={4}>
+              <Stack>
                 <HStack>
                   <Box>
-                    <FormControl id="firstName">
+                    <FormControl id="fullname">
                       <FormLabel>Full Name</FormLabel>
-                      <Input type="text" />
+                      <Input type="text" size={"sm"} />
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl id="lastName">
+                    <FormControl id="email">
                       <FormLabel>Email</FormLabel>
-                      <Input type="text" />
+                      <Input type="email" size={"sm"} />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="number">
+                      <FormLabel>Number</FormLabel>
+                      <Input type="text" size={"sm"} />
                     </FormControl>
                   </Box>
                 </HStack>
-
                 <HStack>
                   <Box>
-                    <FormControl id="firstName">
-                      <FormLabel>Number</FormLabel>
-                      <Input type="text" />
+                    <FormControl id="city">
+                      <FormLabel>City</FormLabel>
+                      <Input type="text" size={"sm"} />
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl id="lastName">
-                      <FormLabel>Username</FormLabel>
-                      <Input type="text" />
+                    <FormControl id="state">
+                      <FormLabel>State</FormLabel>
+                      <Input type="text" size={"sm"} />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="country">
+                      <FormLabel>country</FormLabel>
+                      <Input type="text" size={"sm"} />
                     </FormControl>
                   </Box>
                 </HStack>
-                <FormControl id="email">
-                  <FormLabel>address</FormLabel>
-                  <Textarea placeholder="" size="sm" />
-                </FormControl>
-                <Stack spacing={5} pt={2}>
-                  <div class="box-2 " style={{ width: "100%" }}>
+                <HStack>
+                  <Box>
+                    <FormControl id="city">
+                      <FormLabel>ZipCode</FormLabel>
+                      <Input type="text" size={"sm"} />
+                    </FormControl>
+                  </Box>
+                </HStack>
+                <HStack>
+                  <FormControl id="email">
+                    <FormLabel>Address</FormLabel>
+                    <Textarea placeholder="" size="sm" />
+                  </FormControl>
+                </HStack>
+                <Stack pt={2} style={{ alignItems: "center" }}>
+                  <div
+                    class="box-2 "
+                    style={{ width: "100%", alignItems: "center" }}
+                  >
                     <StripeCheckout
                       name={"Securly Payment"}
                       description="Big Data Stuff"
@@ -275,7 +294,6 @@ function Shop({ data }) {
                     </StripeCheckout>
                   </div>
                 </Stack>
-                <Stack pt={6}></Stack>
               </Stack>
             </Box>
           </div>
