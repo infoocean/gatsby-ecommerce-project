@@ -7,7 +7,7 @@ import { cartContext } from "../../Components/Store/GlobalContextProvider";
 
 function Cart() {
   const { cart, setcart } = useContext(cartContext);
-  console.log(cart);
+  //console.log(cart);
 
   const [totalamt, settotalamt] = useState(0);
   useEffect(() => {
