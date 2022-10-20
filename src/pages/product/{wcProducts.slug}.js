@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Button,
   Container,
@@ -6,7 +6,6 @@ import {
   Heading,
   Image,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
@@ -25,9 +24,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import Header from "../../Templates/header";
-import { graphql, Link, useStaticQuery } from "gatsby";
+import { graphql, Link } from "gatsby";
 import slugify from "slugify";
+import Layout from "../../Components/Layout";
+import { cartContext } from "../../Components/Store/GlobalContextProvider";
 
 const jacket_data = [
   {
@@ -260,13 +260,16 @@ export const query = graphql`
 function Shop({ data }) {
   //console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isOpencart, setisOpencart] = useState(false);
+
   //const mydata = useStaticQuery(query);
   //console.log(mydata.wcProducts);
   //console.log(data.wcProducts);
   const myproductdet = data.wcProducts;
   //console.log(myproductdet);
   const slugTitle = slugify(myproductdet.slug, { lower: true });
+
+  const { cart, setcart } = useContext(cartContext);
+  console.log(cart);
 
   let mytrouserdata = [];
   function handltrouser(e) {
@@ -291,8 +294,7 @@ function Shop({ data }) {
 
   return (
     <>
-      {/*header component*/}
-      <Header />
+      <Layout />
       <Container maxW={"5xl"} py={12}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
           <Stack spacing={4}>
@@ -315,7 +317,7 @@ function Shop({ data }) {
                 colorScheme={"orange"}
                 bg={"blue.400"}
                 _hover={{ bg: "orange.500" }}
-                // onClick={() => setcart([...cart, myproductdet])}
+                onClick={() => setcart([...cart, myproductdet])}
               >
                 Add To Cart
               </Button>

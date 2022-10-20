@@ -2,7 +2,7 @@ import { navigate } from "gatsby";
 import React from "react";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
-import Header from "../../Templates/header";
+import Layout from "../../Components/Layout";
 
 function StripeCheckouts() {
   const onToken = (token, address) => {
@@ -102,7 +102,7 @@ function StripeCheckouts() {
 
   return (
     <>
-      <Header />
+      <Layout />
       <StripeCheckout
         name={"Securly Payment"}
         description="Big Data Stuff"

@@ -1,14 +1,13 @@
 import React from "react";
-
 import "../../assets/style.css";
 import { AiOutlineCheck } from "react-icons/ai";
 import { Link } from "gatsby";
-import Header from "../../Templates/header";
+import Layout from "../../Components/Layout";
 
 function SuccessPage() {
   return (
     <>
-      <Header />
+      <Layout />
       <div class="container">
         <div class="row">
           <div class="col-md-6 mx-auto mt-5">

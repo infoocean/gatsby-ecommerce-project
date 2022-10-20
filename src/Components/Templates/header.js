@@ -7,6 +7,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { cartContext } from "../Store/GlobalContextProvider";
 
 const Logo = () => {
   return (
@@ -23,7 +24,10 @@ const Logo = () => {
   );
 };
 
-function Header(props) {
+function Header() {
+  const { cart, setcart } = useContext(cartContext);
+  console.log(cart);
+
   return (
     <>
       {/*header navbar start*/}
@@ -63,7 +67,7 @@ function Header(props) {
               href={"#"}
             >
               <Link to="/cart/productcartdet" style={{ marginRight: "20px" }}>
-                Cart
+                Cart({cart ? cart.length : 0})
               </Link>
             </Button>
             <Button

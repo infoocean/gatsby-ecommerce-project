@@ -1,20 +1,27 @@
-import React, { useContext, useState } from "react";
-import Header from "../../Templates/header";
+import React, { useContext } from "react";
 import { graphql, navigate, useStaticQuery } from "gatsby";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
 import {
+  Box,
   Button,
   Container,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
+  HStack,
   Image,
+  Input,
+  InputGroup,
   SimpleGrid,
   Stack,
   Text,
+  Textarea,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import Layout from "../../Components/Layout";
 
 export const query = graphql`
   query ($slug: String) {
@@ -146,8 +153,7 @@ function Shop({ data }) {
 
   return (
     <>
-      {/*header component*/}
-      <Header />
+      <Layout />
       <div class="container  mt-5 mb-5">
         <div className="row">
           <div className="col-lg-6">
@@ -200,33 +206,78 @@ function Shop({ data }) {
             </SimpleGrid>
           </div>
           <div className="col-lg-6 ">
-            <div class="box-2 " style={{ width: "100%" }}>
-              <StripeCheckout
-                name={"Securly Payment"}
-                description="Big Data Stuff"
-                image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
-                amount="$100"
-                currency="USD"
-                stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
-                locale="India"
-                token={onToken}
-                email=""
-                shippingAddress
-                billingAddress
-              >
-                <button
-                  style={{
-                    layout: "horizontal",
-                    fontSize: "17px",
-                    fontWeight: "bold",
-                    width: "100%",
-                  }}
-                  class="btn btn-primary"
-                >
-                  Pay With Card Stripe Payment
-                </button>
-              </StripeCheckout>
-            </div>
+            <Box
+              rounded={"lg"}
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              p={5}
+            >
+              <Stack spacing={4}>
+                <HStack>
+                  <Box>
+                    <FormControl id="firstName">
+                      <FormLabel>Full Name</FormLabel>
+                      <Input type="text" />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="lastName">
+                      <FormLabel>Email</FormLabel>
+                      <Input type="text" />
+                    </FormControl>
+                  </Box>
+                </HStack>
+
+                <HStack>
+                  <Box>
+                    <FormControl id="firstName">
+                      <FormLabel>Number</FormLabel>
+                      <Input type="text" />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="lastName">
+                      <FormLabel>Username</FormLabel>
+                      <Input type="text" />
+                    </FormControl>
+                  </Box>
+                </HStack>
+                <FormControl id="email">
+                  <FormLabel>address</FormLabel>
+                  <Textarea placeholder="" size="sm" />
+                </FormControl>
+                <Stack spacing={5} pt={2}>
+                  <div class="box-2 " style={{ width: "100%" }}>
+                    <StripeCheckout
+                      name={"Securly Payment"}
+                      description="Big Data Stuff"
+                      image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
+                      amount="$100"
+                      currency="USD"
+                      stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
+                      locale="India"
+                      token={onToken}
+                      email=""
+                      shippingAddress
+                      billingAddress
+                    >
+                      <button
+                        style={{
+                          layout: "horizontal",
+                          fontSize: "17px",
+                          fontWeight: "bold",
+                          width: "100%",
+                        }}
+                        class="btn btn-primary"
+                      >
+                        Pay With Card Stripe Payment
+                      </button>
+                    </StripeCheckout>
+                  </div>
+                </Stack>
+                <Stack pt={6}></Stack>
+              </Stack>
+            </Box>
           </div>
         </div>
       </div>

@@ -1,10 +1,7 @@
 import React from "react";
 
-const CartContext = require("./src/pages/Store/Context");
+import Cartstore from "./src/Components/Store/GlobalContextProvider";
 
-// Wraps every page in a component
-const wrapPageElement = ({ element }) => {
-  return <CartContext>{element}</CartContext>;
+export const wrapRootElement = ({ element }) => {
+  return <Cartstore>{element}</Cartstore>;
 };
-
-export default wrapPageElement;

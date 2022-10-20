@@ -1,60 +1,24 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import {
-  Button,
-  Container,
-  Heading,
-  HStack,
-  Input,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { HiRefresh } from "react-icons/hi";
+import React, { useContext, useEffect, useState } from "react";
+import { Container, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { IoArrowRedoSharp, IoArrowUndoSharp } from "react-icons/io5";
-import Header from "../../Templates/header";
-
 import { Link } from "gatsby";
-import { MyCart } from "../Store/Context";
-
-const product = [
-  {
-    id: 1,
-    product_name: "product1",
-    descriprion:
-      " Quis aute iure reprehenderit in voluptate velit essecillum dolore.",
-    price: "$20",
-    image:
-      "https://cdn.pixabay.com/photo/2020/05/26/09/32/product-5222398_960_720.jpg",
-  },
-];
-
-//console.log(product);
+import Layout from "../../Components/Layout";
+import { cartContext } from "../../Components/Store/GlobalContextProvider";
 
 function Cart() {
-  // const { cart } = useContext(MyCart);
-  // console.log(cart);
+  const { cart, setcart } = useContext(cartContext);
+  console.log(cart);
 
-  const [calculation, setcalculation] = useState({ subtotal: 1, total: 1 });
-
-  const rerducer = (state, action) => {
-    //console.log(state, action);
-    if (action.type === "increment") {
-      return eval(state + 1);
-    } else {
-      if (state > 1) {
-        return eval(state - 1);
-      } else {
-        return state;
-      }
-    }
-  };
-  const [state, dispatch] = useReducer(rerducer, 1);
-
-  useEffect(() => {}, []);
+  const [totalamt, settotalamt] = useState(0);
+  useEffect(() => {
+    settotalamt(
+      cart.reduce((acc, curr) => Number(acc) + Number(curr.price), 0)
+    );
+  }, []);
 
   return (
     <>
-      <Header />
+      <Layout />
       <Container maxW={"7xl"}>
         <Stack
           align={"center"}
@@ -65,7 +29,7 @@ function Cart() {
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
             <div class="container">
               <Heading style={{ fontSize: "20px" }}>
-                Total (0) item in your cart
+                Total ({cart ? cart.length : 0}) item in your cart
               </Heading>
               <table id="cart" class="table table-hover table-condensed">
                 <thead>
@@ -79,49 +43,28 @@ function Cart() {
                   </tr>
                 </thead>
                 <tbody>
-                  {product.map((item, key) => {
+                  {cart.map((item, key) => {
                     return (
                       <tr key={key}>
                         <td data-th="Product">
                           <div class="row">
                             <div class="col-sm-2 hidden-xs">
                               <img
-                                src={item.image}
+                                src={
+                                  item && item.images[0] && item.images[0].src
+                                }
                                 alt="..."
                                 class="img-responsive"
                               />
                             </div>
                             <div class="col-sm-10">
-                              <h4 class="nomargin">{item.product_name}</h4>
+                              <h4 class="nomargin">{item.name}</h4>
                               <p>{item.descriprion}</p>
                             </div>
                           </div>
                         </td>
                         <td data-th="Price">{item.price}</td>
-                        <td data-th="Quantity">
-                          {/* <HStack>
-                            <Button
-                              colorScheme="gray"
-                              size="xs"
-                              onClick={() => dispatch({ type: "decrement" })}
-                            >
-                              -
-                            </Button>
-                            <Input
-                              size="xs"
-                              value={Number(state)}
-                              type="button"
-                            />
-                            <Button
-                              colorScheme="gray"
-                              size="xs"
-                              onClick={() => dispatch({ type: "increment" })}
-                            >
-                              +
-                            </Button>
-                          </HStack> */}
-                          1
-                        </td>
+                        <td data-th="Quantity">1</td>
                         <td data-th="Subtotal" class="text-center">
                           {item.price}
                         </td>
@@ -143,7 +86,7 @@ function Cart() {
                     </td>
                     <td colspan="2" class="hidden-xs"></td>
                     <td class="hidden-xs text-center">
-                      <strong>${calculation.total}</strong>
+                      <strong>{totalamt}</strong>
                     </td>
                     <td>
                       <Link to="/CheckoutPage/teststripepayment">

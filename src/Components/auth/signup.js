@@ -19,14 +19,14 @@ import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik } from "formik";
 import { Link } from "gatsby";
-import Header from "../../Templates/header";
+import Layout from "../Layout";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
-      <Header />
+      <Layout />
       <Flex
         minH={"100vh"}
         align={"center"}

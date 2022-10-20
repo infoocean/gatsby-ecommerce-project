@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { graphql, Link, useStaticQuery } from "gatsby";
-import { MyCart } from "../Store/Context";
+import { cartContext } from "../Store/GlobalContextProvider";
 
 const query = graphql`
   {
@@ -43,8 +43,8 @@ function BestsellerProducts() {
   //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
 
-  // const { cart, setcart } = useContext(MyCart);
-  // //console.log(cart);
+  const { cart, setcart } = useContext(cartContext);
+  console.log(cart);
 
   return (
     <>
@@ -98,7 +98,7 @@ function BestsellerProducts() {
                         <Text color={"gray.500"}>Price: ${price}</Text>
                         <Button
                           colorScheme="orange"
-                          // onClick={() => setcart([...cart, item])}
+                          onClick={() => setcart([...cart, item])}
                         >
                           add to cart
                         </Button>

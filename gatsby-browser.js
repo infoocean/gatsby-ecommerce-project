@@ -3,10 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "@popperjs/core/dist/umd/popper.min.js";
 
-const CartContext = require("./src/pages/Store/Context");
+import Cartstore from "./src/Components/Store/GlobalContextProvider";
 
-const wrapPageElement = ({ element }) => {
-  return <CartContext>{element}</CartContext>;
+export const wrapRootElement = ({ element }) => {
+  return <Cartstore>{element}</Cartstore>;
 };
-
-export default wrapPageElement;

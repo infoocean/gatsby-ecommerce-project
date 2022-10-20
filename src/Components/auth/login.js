@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link } from "gatsby";
-import Header from "../../Templates/header";
+import Layout from "../Layout";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +59,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <Header />
+      <Layout />
       <Flex
         align={"center"}
         justify={"center"}

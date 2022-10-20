@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../../API/Woocommerceapi";
 
 import "../../assets/style.css";
-import Header from "../../Templates/header";
+import Layout from "../../Components/Layout";
 
 function Orders() {
   // const order_id = localStorage.getItem("order_id");
@@ -25,7 +25,7 @@ function Orders() {
 
   return (
     <>
-      <Header />
+      <Layout />
       <div
         class="d-flex flex-column justify-content-center align-items-center"
         id="order-heading"
