@@ -4,6 +4,7 @@ import {
   Center,
   Text,
   Container,
+  Button,
   Heading,
   Image,
   SimpleGrid,
@@ -13,7 +14,6 @@ import Header from "../Templates/header";
 import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { MyCart } from "./Store/Context";
-import { Button } from "bootstrap";
 
 const query = graphql`
   {
@@ -37,7 +37,7 @@ function Shop() {
   //console.log(data.allWcProducts.nodes);
   const mydata = data.allWcProducts.nodes;
 
-  const { cart, setcart } = useContext(MyCart);
+  // const { cart, setcart } = useContext(MyCart);
   //console.log(cart);
 
   return (
@@ -48,7 +48,6 @@ function Shop() {
           {mydata.slice(0, 8).map((item, key) => {
             const { name, images, price, description, slug } = item;
             const slugTitle = slugify(slug, { lower: true });
-
             return (
               <Box>
                 <Center py={6}>
@@ -80,7 +79,7 @@ function Shop() {
                       <Text color={"gray.500"}>${price}</Text>
                       <Button
                         colorScheme="orange"
-                        onClick={() => setcart([...cart, item])}
+                        // onClick={() => setcart([...cart, item])}
                       >
                         add to cart
                       </Button>

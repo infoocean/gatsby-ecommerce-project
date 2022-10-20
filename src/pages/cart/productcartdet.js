@@ -76,7 +76,6 @@ function Cart() {
                     <th style={{ width: "22%" }} class="text-center">
                       Subtotal
                     </th>
-                    <th style={{ width: "10%" }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -100,7 +99,7 @@ function Cart() {
                         </td>
                         <td data-th="Price">{item.price}</td>
                         <td data-th="Quantity">
-                          <HStack>
+                          {/* <HStack>
                             <Button
                               colorScheme="gray"
                               size="xs"
@@ -120,21 +119,11 @@ function Cart() {
                             >
                               +
                             </Button>
-                          </HStack>
+                          </HStack> */}
+                          1
                         </td>
                         <td data-th="Subtotal" class="text-center">
-                          {calculation.subtotal}
-                        </td>
-                        <td class="actions" data-th="">
-                          <button
-                            class="btn btn-info btn-sm "
-                            style={{ marginRight: "10px" }}
-                          >
-                            <HiRefresh />
-                          </button>
-                          <button class="btn btn-danger btn-sm">
-                            <RiDeleteBin5Line />
-                          </button>
+                          {item.price}
                         </td>
                       </tr>
                     );

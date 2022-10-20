@@ -1,10 +1,10 @@
 import React from "react";
 
-const MyCart = require("./src/pages/Store/Context");
+const CartContext = require("./src/pages/Store/Context");
 
 // Wraps every page in a component
 const wrapPageElement = ({ element }) => {
-  return <MyCart>{element}</MyCart>;
+  return <CartContext>{element}</CartContext>;
 };
 
 export default wrapPageElement;

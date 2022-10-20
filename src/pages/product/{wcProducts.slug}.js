@@ -275,7 +275,6 @@ function Shop({ data }) {
     mytrouserdata[e.target.name] = e.target.value;
     //console.log(mytrouserdata);
   }
-
   let myjacketdata = [];
   function handljacket(e) {
     //alert(e.target.value);
@@ -283,15 +282,11 @@ function Shop({ data }) {
     myjacketdata[e.target.name] = e.target.value;
     //console.log(myjacketdata);
   }
+  function handletrouserdata(e) {
+    console.log("mytrouserdata", mytrouserdata);
+  }
   function handlejacketdata(e) {
     console.log("myjacketdata", myjacketdata);
-  }
-  function handletrouserdata(e) {
-    console.log("myjacketdata", myjacketdata, "mytrouserdata", myjacketdata);
-  }
-
-  function setisOpenmycart() {
-    setisOpencart(true);
   }
 
   return (
@@ -464,22 +459,6 @@ function Shop({ data }) {
           </Tabs>
         </ModalContent>
       </Modal>
-      {/*my model cart component*/}
-
-      {isOpencart && (
-        <Modal>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Text fontWeight="bold" mb="1rem">
-                You can scroll the content behind the modal
-              </Text>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      )}
     </>
   );
 }

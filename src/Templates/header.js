@@ -63,7 +63,7 @@ function Header(props) {
               href={"#"}
             >
               <Link to="/cart/productcartdet" style={{ marginRight: "20px" }}>
-                <b>{/* Cart<sup>{cart && cart.length}</sup> */}</b>
+                Cart
               </Link>
             </Button>
             <Button
