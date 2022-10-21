@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Flex,
   Box,
@@ -12,48 +12,80 @@ import {
   useColorModeValue,
   InputGroup,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { Link } from "gatsby";
-import Layout from "../Layout";
+import { Link, navigate } from "gatsby";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { usercontext } from "../Store/GlobalContextProvider";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showsnipper, setshowsnipper] = useState(false);
+
+  const { isuser, setisuser } = useContext(usercontext);
+  //console.log(isuser);
+
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [err, seterr] = useState("");
-
+  const showToastLoginSuccessMessage = () => {
+    toast.success("User Login SuccessFully !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
   function HandlEmail(event) {
     setemail(event.target.value);
   }
   const HandlPassword = (e) => {
     setpassword(e.target.value);
   };
-
   const HandleLoginform = async (e) => {
+    setshowsnipper(true);
     e.preventDefault();
     if (email !== "" && password !== "") {
       let data = JSON.stringify({ email, password });
       //alert(data);
-      const res = await fetch(
-        "https://gatsbyproject-9c16d-default-rtdb.firebaseio.com/gatsbydatabase.json",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: data,
+      try {
+        const response = await fetch(
+          "https://mynodeherokuappproject.herokuapp.com/wybrituserlogin",
+          {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data,
+          }
+        );
+        const res = await response.json();
+        //console.log(res);
+        if (response.status === 200) {
+          setisuser({
+            userid: res.userinfo._id,
+            username: res.userinfo.firstname,
+          });
+          setemail("");
+          setpassword("");
+          seterr("");
+          showToastLoginSuccessMessage();
+          const redirectfn = () => {
+            navigate("/");
+          };
+          setshowsnipper(false);
+          setTimeout(() => {
+            redirectfn();
+          }, "3000");
+        } else {
+          seterr("Plese Enter Valid Email  or Password  ");
+          setshowsnipper(false);
         }
-      );
-
-      console.log(res);
-      return false;
-
-      setemail("");
-      setpassword("");
-      seterr("");
+      } catch (error) {
+        //console.log(error);
+      }
     } else {
       seterr("Plese Enter Email** or Password**");
+      setshowsnipper(false);
     }
   };
 
@@ -91,7 +123,7 @@ export default function LoginForm() {
                     onChange={HandlEmail}
                   />
                 </FormControl>
-                <FormControl id="password">
+                <FormControl id="password" mt={5}>
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
@@ -118,7 +150,7 @@ export default function LoginForm() {
                 <Text mt={1} mb={1} style={{ color: "red" }}>
                   {err}
                 </Text>
-                <Stack spacing={7}>
+                <Stack spacing={7} mt={3}>
                   <Button
                     type="submit"
                     name="submit"
@@ -129,6 +161,15 @@ export default function LoginForm() {
                     }}
                   >
                     Log in
+                    {showsnipper === true ? (
+                      <Spinner
+                        color="white.500"
+                        size="sm"
+                        style={{ marginLeft: "10px" }}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </Button>
                 </Stack>
               </form>
@@ -146,6 +187,7 @@ export default function LoginForm() {
           </Box>
         </Stack>
       </Flex>
+      <ToastContainer />
     </>
   );
 }

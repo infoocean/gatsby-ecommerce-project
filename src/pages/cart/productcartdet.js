@@ -89,13 +89,23 @@ function Cart() {
                       <strong>{totalamt}</strong>
                     </td>
                     <td>
-                      <Link to="/CheckoutPage/teststripepayment">
-                        <a class="btn btn-success btn-block">
-                          <HStack>
-                            <Text>Checkout</Text> <IoArrowRedoSharp />
-                          </HStack>
-                        </a>
-                      </Link>
+                      {totalamt > 0 ? (
+                        <Link to="/CheckoutPage/teststripepayment">
+                          <a class="btn btn-success btn-block">
+                            <HStack>
+                              <Text>Checkout</Text> <IoArrowRedoSharp />
+                            </HStack>
+                          </a>
+                        </Link>
+                      ) : (
+                        <Link>
+                          <a class="btn btn-success btn-block">
+                            <HStack>
+                              <Text>Checkout</Text> <IoArrowRedoSharp />
+                            </HStack>
+                          </a>
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 </tfoot>

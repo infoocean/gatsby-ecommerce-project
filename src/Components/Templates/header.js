@@ -7,7 +7,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { cartContext } from "../Store/GlobalContextProvider";
+import { cartContext, usercontext } from "../Store/GlobalContextProvider";
 
 const Logo = () => {
   return (
@@ -26,7 +26,9 @@ const Logo = () => {
 
 function Header() {
   const { cart, setcart } = useContext(cartContext);
-  console.log(cart);
+  //console.log(cart);
+  const { isuser, setisuser } = useContext(usercontext);
+  //console.log(isuser);
 
   return (
     <>
@@ -70,28 +72,54 @@ function Header() {
                 Cart({cart ? cart.length : 0})
               </Link>
             </Button>
-            <Button
-              as={"a"}
-              fontSize={"sm"}
-              fontWeight={400}
-              variant={"link"}
-              href={"#"}
-            >
-              <Link to="/loginpage">Sign In</Link>
-            </Button>
-            <Button
-              display={{ base: "none", md: "inline-flex" }}
-              fontSize={"sm"}
-              fontWeight={600}
-              color={"white"}
-              bg={"pink.400"}
-              href={"#"}
-              _hover={{
-                bg: "pink.300",
-              }}
-            >
-              <Link to="/registrationpage">Sign Up</Link>
-            </Button>
+
+            {isuser && isuser.userid ? (
+              <>
+                <Button
+                  as={"a"}
+                  fontSize={"sm"}
+                  fontWeight={400}
+                  variant={"link"}
+                  href={"#"}
+                >
+                  <Link to="/">Hii, {isuser && isuser.username}</Link>
+                </Button>
+                <Button
+                  as={"a"}
+                  fontSize={"sm"}
+                  fontWeight={400}
+                  variant={"link"}
+                  href={"#"}
+                >
+                  <Link to="/logout">Logout</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  as={"a"}
+                  fontSize={"sm"}
+                  fontWeight={400}
+                  variant={"link"}
+                  href={"#"}
+                >
+                  <Link to="/loginpage">Sign In</Link>
+                </Button>
+                <Button
+                  display={{ base: "none", md: "inline-flex" }}
+                  fontSize={"sm"}
+                  fontWeight={600}
+                  color={"white"}
+                  bg={"pink.400"}
+                  href={"#"}
+                  _hover={{
+                    bg: "pink.300",
+                  }}
+                >
+                  <Link to="/registrationpage">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </Stack>
         </Container>
       </Box>

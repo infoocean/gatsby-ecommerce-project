@@ -4,6 +4,7 @@ import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
 import {
   Box,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -255,11 +256,35 @@ function Shop({ data }) {
                       <Input type="text" size={"sm"} />
                     </FormControl>
                   </Box>
+                  <Box>
+                    <FormControl id="city">
+                      <FormLabel>H.No./B.No</FormLabel>
+                      <Input type="text" size={"sm"} />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="city">
+                      <FormLabel>Area/Colony</FormLabel>
+                      <Input type="text" size={"sm"} />
+                    </FormControl>
+                  </Box>
                 </HStack>
                 <HStack>
                   <FormControl id="email">
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>Full Address</FormLabel>
                     <Textarea placeholder="" size="sm" />
+                  </FormControl>
+                </HStack>
+                <HStack>
+                  <FormControl id="email">
+                    <Checkbox
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: "normal",
+                      }}
+                    >
+                      Billing Address Same as the shipping Address
+                    </Checkbox>
                   </FormControl>
                 </HStack>
                 <Stack pt={2} style={{ alignItems: "center" }}>

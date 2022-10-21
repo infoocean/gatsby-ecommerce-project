@@ -1,13 +1,16 @@
+import { Checkbox, color } from "@chakra-ui/react";
 import { navigate } from "gatsby";
 import React, { useContext, useEffect, useState } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
 import Layout from "../../Components/Layout";
-import { cartContext } from "../../Components/Store/GlobalContextProvider";
+import {
+  cartContext,
+  usercontext,
+} from "../../Components/Store/GlobalContextProvider";
 
 function StripeCheckouts() {
   const { cart, setcart } = useContext(cartContext);
-
   const [totalamt, settotalamt] = useState(0);
   useEffect(() => {
     settotalamt(
@@ -15,10 +18,37 @@ function StripeCheckouts() {
     );
   }, []);
 
-  const onToken = (token, address) => {
-    //console.log(token, address);
-    const data = { token, address, ammount: 100 };
-    //console.log(data);
+  const { isuser, setisuser } = useContext(usercontext);
+
+  console.log(isuser);
+
+  const [formdata, setformdata] = useState({
+    name: "",
+    email: "",
+    number: "",
+    city: "",
+    state: "",
+    country: "",
+    zipcode: "",
+    h_no_b_no: "",
+    area_colony: "",
+    landmark: "",
+    altnum: "",
+    altemail: "",
+  });
+
+  const inputsHandler = (e) => {
+    const { name, value } = e.target;
+    setformdata((formdata) => ({
+      ...formdata,
+      [name]: value,
+    }));
+  };
+
+  const onToken = (token) => {
+    //console.log(token);
+    const data = { token, formdata, ammount: totalamt };
+    console.log(data);
     //return false;
     fetch(
       "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration",
@@ -34,7 +64,7 @@ function StripeCheckouts() {
         return response.json();
       })
       .then(function (data) {
-        //console.log(data);
+        console.log(data);
 
         if (data && data.status === "succeeded") {
           // localStorage.setItem(
@@ -42,33 +72,34 @@ function StripeCheckouts() {
           //   data.charges.data[0].balance_transaction
           // );
           // localStorage.setItem("receipt", data.charges.data[0].receipt_url);
+
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
             payment_method_title: data.description,
             set_paid: true,
             billing: {
-              first_name: data.shipping.name,
-              address_1: data.shipping.address.line1,
-              address_2: "",
-              city: data.shipping.address.city,
-              state: data.shipping.address.state,
-              postcode: data.shipping.address.postal_code,
-              country: data.shipping.address.country,
-              email: "sj2585097@gmail.com",
-              phone: "9131649079",
+              first_name: formdata.name,
+              address_1: formdata.address,
+              address_2: formdata.address,
+              city: formdata.city,
+              state: formdata.state,
+              postcode: formdata.zipcode,
+              country: formdata.country,
+              email: formdata.email,
+              phone: formdata.number,
             },
             shipping: {
-              first_name: data.shipping.name,
-              address_1: data.shipping.address.line1,
-              address_2: "",
-              city: data.shipping.address.city,
-              state: data.shipping.address.state,
-              postcode: data.shipping.address.postal_code,
-              country: data.shipping.address.country,
+              first_name: formdata.name,
+              address_1: formdata.address,
+              address_2: formdata.address,
+              city: formdata.city,
+              state: formdata.state,
+              postcode: formdata.zipcode,
+              country: formdata.country,
             },
             line_items: [
               {
-                product_id: 10,
+                product_id: 10443,
                 quantity: 1,
               },
             ],
@@ -76,12 +107,12 @@ function StripeCheckouts() {
               {
                 method_id: data.charges.data[0].balance_transaction,
                 method_title: "Flat Rate",
-                total: "100",
+                total: (totalamt * 100).toString(),
               },
             ],
           };
-          //console.log("new create order^^^^^^^", newcreateorder);
-
+          console.log("new create order^^^^^^^", newcreateorder);
+          return false;
           api
             .post("orders", newcreateorder)
             .then((response) => {
@@ -118,7 +149,7 @@ function StripeCheckouts() {
           <div class="col-md-8 mb-4">
             <div class="card mb-4">
               <div class="card-header py-3">
-                <h5 class="mb-0">Biling details</h5>
+                <h5 class="mb-0">Biling details & Shipping Details</h5>
               </div>
               <div class="card-body">
                 <form>
@@ -126,20 +157,13 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example1">
-                          First name
+                          Name
                         </label>
                         <input
                           type="text"
-                          id="form7Example1"
-                          class="form-control"
-                        />
-                      </div>
-                      <div class="form-outline">
-                        <label class="form-label" for="form7Example1">
-                          Last name
-                        </label>
-                        <input
-                          type="text"
+                          name="name"
+                          value={formdata.name}
+                          onChange={inputsHandler}
                           id="form7Example1"
                           class="form-control"
                         />
@@ -152,21 +176,10 @@ function StripeCheckouts() {
                         </label>
                         <input
                           type="text"
+                          name="email"
+                          value={formdata.email}
+                          onChange={inputsHandler}
                           id="form7Example2"
-                          class="form-control"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div class="form-outline">
-                        <label class="form-label" for="form7Example1">
-                          Email
-                        </label>
-                        <input
-                          type="text"
-                          id="form7Example1"
                           class="form-control"
                         />
                       </div>
@@ -178,6 +191,9 @@ function StripeCheckouts() {
                         </label>
                         <input
                           type="text"
+                          name="number"
+                          onChange={inputsHandler}
+                          value={formdata.number}
                           id="form7Example2"
                           class="form-control"
                         />
@@ -192,6 +208,9 @@ function StripeCheckouts() {
                         </label>
                         <input
                           type="text"
+                          name="city"
+                          value={formdata.city}
+                          onChange={inputsHandler}
                           id="form7Example1"
                           class="form-control"
                         />
@@ -204,6 +223,9 @@ function StripeCheckouts() {
                         </label>
                         <input
                           type="text"
+                          name="state"
+                          value={formdata.state}
+                          onChange={inputsHandler}
                           id="form7Example2"
                           class="form-control"
                         />
@@ -216,10 +238,119 @@ function StripeCheckouts() {
                         </label>
                         <input
                           type="text"
+                          name="country"
+                          value={formdata.country}
+                          onChange={inputsHandler}
                           id="form7Example2"
                           class="form-control"
                         />
                       </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example1">
+                          Zip Code
+                        </label>
+                        <input
+                          type="text"
+                          name="zipcode"
+                          value={formdata.zipcode}
+                          onChange={inputsHandler}
+                          id="form7Example1"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example2">
+                          H.NO/B.No
+                        </label>
+                        <input
+                          type="text"
+                          name="hnobno"
+                          value={formdata.h_no_b_no}
+                          onChange={inputsHandler}
+                          id="form7Example2"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example2">
+                          Area/Colony
+                        </label>
+                        <input
+                          type="text"
+                          name="areacolony"
+                          value={formdata.area_colony}
+                          onChange={inputsHandler}
+                          id="form7Example2"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example1">
+                          LandMark
+                        </label>
+                        <input
+                          type="text"
+                          name="landmark"
+                          value={formdata.landmark}
+                          onChange={inputsHandler}
+                          id="form7Example1"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example2">
+                          Alt Number
+                        </label>
+                        <input
+                          type="text"
+                          name="altnumber"
+                          value={formdata.altnum}
+                          onChange={inputsHandler}
+                          id="form7Example2"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-outline">
+                        <label class="form-label" for="form7Example2">
+                          Alt Eamil
+                        </label>
+                        <input
+                          type="text"
+                          name="altemail"
+                          value={formdata.altemail}
+                          onChange={inputsHandler}
+                          id="form7Example2"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <Checkbox
+                        style={{
+                          fontSize: "10px",
+                          fontWeight: "normal",
+                        }}
+                      >
+                        Billing and Shipping Adddress Same
+                      </Checkbox>
                     </div>
                   </div>
                 </form>
@@ -258,12 +389,14 @@ function StripeCheckouts() {
                   description="Big Data Stuff"
                   image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
                   //panelLabel="Give Money"
-                  amount={totalamt}
+                  amount={totalamt * 100}
                   currency="INR"
                   stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
                   locale="India"
                   token={onToken}
                   email=""
+                  //shippingAddress
+                  //billingAddress
                 >
                   <button
                     style={{
@@ -273,6 +406,7 @@ function StripeCheckouts() {
                       width: "100%",
                     }}
                     class="btn btn-primary text-center"
+                    //onClick={handleform}
                   >
                     Pay With Card Stripe Payment
                   </button>
