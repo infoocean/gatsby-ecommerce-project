@@ -75,7 +75,7 @@ export default function LoginForm() {
           setshowsnipper(false);
           setTimeout(() => {
             redirectfn();
-          }, "3000");
+          }, "2000");
         } else {
           seterr("Plese Enter Valid Email  or Password  ");
           setshowsnipper(false);
@@ -159,6 +159,7 @@ export default function LoginForm() {
                     _hover={{
                       bg: "blue.500",
                     }}
+                    disabled={showsnipper === true ? true : false}
                   >
                     Log in
                     {showsnipper === true ? (

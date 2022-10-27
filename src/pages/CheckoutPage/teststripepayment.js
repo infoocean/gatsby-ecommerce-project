@@ -6,11 +6,27 @@ import api from "../../API/Woocommerceapi";
 import Layout from "../../Components/Layout";
 import {
   cartContext,
+  orderid,
+  receipt,
   usercontext,
 } from "../../Components/Store/GlobalContextProvider";
 
 function StripeCheckouts() {
   const { cart, setcart } = useContext(cartContext);
+  //console.log(cart);
+  const obj = Object.values(cart);
+  const length = cart.length;
+  let line_items = [];
+  for (var i = 0; i < length; i++) {
+    line_items.push({
+      product_id: 10443,
+      quantity: 1,
+      subtotal: obj[i].price.toString(),
+      total: obj[i].price.toString(),
+    });
+  }
+
+  const [paymentstatus, setpaymentstatus] = useState(false);
   const [totalamt, settotalamt] = useState(0);
   useEffect(() => {
     settotalamt(
@@ -19,8 +35,8 @@ function StripeCheckouts() {
   }, []);
 
   const { isuser, setisuser } = useContext(usercontext);
-
-  console.log(isuser);
+  const { order_id, setorder_id } = useContext(orderid);
+  const { payreceipt, setpayreceipt } = useContext(receipt);
 
   const [formdata, setformdata] = useState({
     name: "",
@@ -30,8 +46,8 @@ function StripeCheckouts() {
     state: "",
     country: "",
     zipcode: "",
-    h_no_b_no: "",
-    area_colony: "",
+    hnobno: "",
+    areacolony: "",
     landmark: "",
     altnum: "",
     altemail: "",
@@ -48,23 +64,21 @@ function StripeCheckouts() {
   const onToken = (token) => {
     //console.log(token);
     const data = { token, formdata, ammount: totalamt };
-    console.log(data);
+    //console.log(data);
     //return false;
-    fetch(
-      "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration",
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    )
+    setpaymentstatus(true);
+    fetch("http://localhost:3000/stripe-payment-integration-gatsby", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
-        console.log(data);
+        //console.log(data);
 
         if (data && data.status === "succeeded") {
           // localStorage.setItem(
@@ -72,6 +86,7 @@ function StripeCheckouts() {
           //   data.charges.data[0].balance_transaction
           // );
           // localStorage.setItem("receipt", data.charges.data[0].receipt_url);
+          setpayreceipt(data.charges.data[0].receipt_url);
 
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
@@ -79,8 +94,17 @@ function StripeCheckouts() {
             set_paid: true,
             billing: {
               first_name: formdata.name,
-              address_1: formdata.address,
-              address_2: formdata.address,
+              address_1:
+                formdata.hnobno +
+                "," +
+                formdata.areacolony +
+                "," +
+                formdata.landmark +
+                "," +
+                formdata.city +
+                "," +
+                formdata.zipcode,
+              address_2: "",
               city: formdata.city,
               state: formdata.state,
               postcode: formdata.zipcode,
@@ -90,29 +114,33 @@ function StripeCheckouts() {
             },
             shipping: {
               first_name: formdata.name,
-              address_1: formdata.address,
-              address_2: formdata.address,
+              address_1:
+                formdata.hnobno +
+                "," +
+                formdata.areacolony +
+                "," +
+                formdata.landmark +
+                "," +
+                formdata.city +
+                "," +
+                formdata.zipcode,
+              address_2: "",
               city: formdata.city,
               state: formdata.state,
               postcode: formdata.zipcode,
               country: formdata.country,
             },
-            line_items: [
-              {
-                product_id: 10443,
-                quantity: 1,
-              },
-            ],
+            line_items: line_items,
             shipping_lines: [
               {
                 method_id: data.charges.data[0].balance_transaction,
                 method_title: "Flat Rate",
-                total: (totalamt * 100).toString(),
+                total: "0",
               },
             ],
           };
-          console.log("new create order^^^^^^^", newcreateorder);
-          return false;
+          //console.log("new create order^^^^^^^", newcreateorder);
+          //return false;
           api
             .post("orders", newcreateorder)
             .then((response) => {
@@ -125,12 +153,15 @@ function StripeCheckouts() {
                   .put(`orders/${response.data.id}`, data)
                   .then((response) => {
                     //console.log(response.data);
+                    //localStorage.setItem("order_id", response.data.id);
+                    setpaymentstatus(false);
+                    setorder_id(response.data.id);
+                    setcart([]);
+                    navigate(`/CheckoutPage/success`);
                   })
                   .catch((error) => {
                     //console.log(error.response.data);
                   });
-                localStorage.setItem("order_id", response.data.id);
-                navigate(`/CheckoutPage/success`);
               }
             })
             .catch((error) => {
@@ -271,7 +302,7 @@ function StripeCheckouts() {
                         <input
                           type="text"
                           name="hnobno"
-                          value={formdata.h_no_b_no}
+                          value={formdata.hnobno}
                           onChange={inputsHandler}
                           id="form7Example2"
                           class="form-control"
@@ -286,7 +317,7 @@ function StripeCheckouts() {
                         <input
                           type="text"
                           name="areacolony"
-                          value={formdata.area_colony}
+                          value={formdata.areacolony}
                           onChange={inputsHandler}
                           id="form7Example2"
                           class="form-control"
@@ -397,6 +428,7 @@ function StripeCheckouts() {
                   email=""
                   //shippingAddress
                   //billingAddress
+                  disabled={totalamt === 0 ? true : false}
                 >
                   <button
                     style={{
@@ -410,6 +442,11 @@ function StripeCheckouts() {
                   >
                     Pay With Card Stripe Payment
                   </button>
+                  {paymentstatus === true ? (
+                    <span class="spinner spinner-large spinner-blue spinner-slow"></span>
+                  ) : (
+                    ""
+                  )}
                 </StripeCheckout>
               </div>
             </div>

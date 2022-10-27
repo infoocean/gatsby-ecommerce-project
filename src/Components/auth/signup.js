@@ -147,7 +147,7 @@ export default function RegistrationForm() {
                       setshowsnipper(false);
                       setTimeout(() => {
                         redirectfn();
-                      }, "3000");
+                      }, "2000");
                     } else {
                       showToastEamilNumberValidation();
                       setshowsnipper(false);

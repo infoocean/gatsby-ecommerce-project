@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { graphql, navigate } from "gatsby";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
@@ -19,6 +19,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Layout from "../../Components/Layout";
+import { cartContext } from "../../Components/Store/GlobalContextProvider";
 
 export const query = graphql`
   query ($slug: String) {
@@ -46,20 +47,40 @@ export const query = graphql`
 function Shop({ data }) {
   const myproductdet = data.wcProducts;
 
-  const onToken = (token, address) => {
-    //console.log(token, address);
-    const data = { token, address, ammount: myproductdet.price * 100 };
+  const [formdata, setformdata] = useState({
+    name: "",
+    email: "",
+    number: "",
+    city: "",
+    state: "",
+    country: "",
+    zipcode: "",
+    hnobno: "",
+    areacolony: "",
+    address: "",
+  });
 
-    fetch(
-      "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration",
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    )
+  const inputsHandler = (e) => {
+    const { name, value } = e.target;
+    setformdata((formdata) => ({
+      ...formdata,
+      [name]: value,
+    }));
+  };
+
+  const onToken = (token) => {
+    //console.log(token, address);
+    const data = { token, formdata, ammount: myproductdet.price };
+    //console.log(data);
+    //return false;
+
+    fetch("http://localhost:3000/stripe-payment-integration-gatsby", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
       .then(function (response) {
         return response.json();
       })
@@ -67,28 +88,20 @@ function Shop({ data }) {
         console.log(data);
 
         if (data && data.status === "succeeded") {
-          const tnx_id = localStorage.setItem(
-            "tnx_id",
-            data.charges.data[0].balance_transaction
-          );
-          const receipt = localStorage.setItem(
-            "receipt",
-            data.charges.data[0].receipt_url
-          );
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
             payment_method_title: data.description,
             set_paid: true,
             billing: {
               first_name: data.shipping.name,
-              address_1: data.shipping.address.line1,
+              address_1: data.shipping.line1,
               address_2: "",
               city: data.shipping.address.city,
               state: data.shipping.address.state,
               postcode: data.shipping.address.postal_code,
               country: data.shipping.address.country,
-              email: "sj2585097@gmail.com",
-              phone: "9131649079",
+              email: formdata.email,
+              phone: formdata.number,
             },
             shipping: {
               first_name: data.shipping.name,
@@ -101,15 +114,17 @@ function Shop({ data }) {
             },
             line_items: [
               {
-                product_id: myproductdet.id,
+                product_id: 10443,
                 quantity: 1,
+                subtotal: myproductdet.price.toString(),
+                total: myproductdet.price.toString(),
               },
             ],
             shipping_lines: [
               {
-                method_id: data.charges.data[0].balance_transaction,
+                method_id: "flat_rate",
                 method_title: "Flat Rate",
-                total: (myproductdet.price * 100).toString(),
+                total: "0",
               },
             ],
           };
@@ -127,12 +142,12 @@ function Shop({ data }) {
                   .put(`orders/${response.data.id}`, data)
                   .then((response) => {
                     //console.log(response.data);
+                    //localStorage.setItem("order_id", response.data.id);
+                    //navigate(`/CheckoutPage/success`);
                   })
                   .catch((error) => {
                     //console.log(error.response.data);
                   });
-                localStorage.setItem("order_id", response.data.id);
-                navigate(`/CheckoutPage/success`);
               }
             })
             .catch((error) => {
@@ -163,7 +178,7 @@ function Shop({ data }) {
                   Grey Classic
                 </Text>
                 {myproductdet.price ? (
-                  <Text>Price : ${myproductdet.price}</Text>
+                  <Text>Price : {myproductdet.price}</Text>
                 ) : (
                   ""
                 )}
@@ -213,19 +228,37 @@ function Shop({ data }) {
                   <Box>
                     <FormControl id="fullname">
                       <FormLabel>Full Name</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="name"
+                        value={formdata.name}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="email">
                       <FormLabel>Email</FormLabel>
-                      <Input type="email" size={"sm"} />
+                      <Input
+                        type="email"
+                        size={"sm"}
+                        name="email"
+                        value={formdata.email}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="number">
                       <FormLabel>Number</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="number"
+                        value={formdata.number}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                 </HStack>
@@ -233,19 +266,37 @@ function Shop({ data }) {
                   <Box>
                     <FormControl id="city">
                       <FormLabel>City</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="city"
+                        value={formdata.city}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="state">
                       <FormLabel>State</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="state"
+                        value={formdata.state}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="country">
                       <FormLabel>country</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="country"
+                        value={formdata.country}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                 </HStack>
@@ -253,26 +304,50 @@ function Shop({ data }) {
                   <Box>
                     <FormControl id="city">
                       <FormLabel>ZipCode</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="zipcode"
+                        value={formdata.zipcode}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="city">
                       <FormLabel>H.No./B.No</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="hnobno"
+                        value={formdata.hnobno}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="city">
                       <FormLabel>Area/Colony</FormLabel>
-                      <Input type="text" size={"sm"} />
+                      <Input
+                        type="text"
+                        size={"sm"}
+                        name="areacolony"
+                        value={formdata.areacolony}
+                        onChange={inputsHandler}
+                      />
                     </FormControl>
                   </Box>
                 </HStack>
                 <HStack>
                   <FormControl id="email">
                     <FormLabel>Full Address</FormLabel>
-                    <Textarea placeholder="" size="sm" />
+                    <Textarea
+                      placeholder=""
+                      size="sm"
+                      name="address"
+                      value={formdata.address}
+                      onChange={inputsHandler}
+                    />
                   </FormControl>
                 </HStack>
                 <HStack>
@@ -302,8 +377,8 @@ function Shop({ data }) {
                       locale="India"
                       token={onToken}
                       email=""
-                      shippingAddress
-                      billingAddress
+                      //shippingAddress
+                      //billingAddress
                     >
                       <button
                         style={{
