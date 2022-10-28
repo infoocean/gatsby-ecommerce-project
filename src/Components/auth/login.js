@@ -64,6 +64,7 @@ export default function LoginForm() {
           setisuser({
             userid: res.userinfo._id,
             username: res.userinfo.firstname,
+            useremail: res.userinfo.email,
           });
           setemail("");
           setpassword("");

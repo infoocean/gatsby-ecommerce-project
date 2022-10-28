@@ -10,10 +10,16 @@ import {
   receipt,
   usercontext,
 } from "../../Components/Store/GlobalContextProvider";
+const style = {
+  color: "red",
+};
 
 function StripeCheckouts() {
   const { cart, setcart } = useContext(cartContext);
   //console.log(cart);
+  if (cart.length === 0) {
+    navigate("/");
+  }
   const obj = Object.values(cart);
   const length = cart.length;
   let line_items = [];
@@ -35,6 +41,11 @@ function StripeCheckouts() {
   }, []);
 
   const { isuser, setisuser } = useContext(usercontext);
+  //console.log(isuser);
+  if (isuser.length === 0) {
+    navigate("/loginpage");
+  }
+
   const { order_id, setorder_id } = useContext(orderid);
   const { payreceipt, setpayreceipt } = useContext(receipt);
 
@@ -67,13 +78,16 @@ function StripeCheckouts() {
     //console.log(data);
     //return false;
     setpaymentstatus(true);
-    fetch("http://localhost:3000/stripe-payment-integration-gatsby", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
+    fetch(
+      "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration-gatsby",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    )
       .then(function (response) {
         return response.json();
       })
@@ -188,7 +202,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example1">
-                          Name
+                          Name <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -203,7 +217,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          Email
+                          Email <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -218,7 +232,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          Number
+                          Number <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -235,7 +249,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example1">
-                          City
+                          City <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -250,7 +264,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          State
+                          State <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -265,7 +279,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          Country
+                          Country <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -282,7 +296,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example1">
-                          Zip Code
+                          Zip Code <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -297,7 +311,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          H.NO/B.No
+                          H.NO/B.No <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -312,7 +326,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example2">
-                          Area/Colony
+                          Area/Colony <span style={style}>*</span>
                         </label>
                         <input
                           type="text"
@@ -329,7 +343,7 @@ function StripeCheckouts() {
                     <div class="col">
                       <div class="form-outline">
                         <label class="form-label" for="form7Example1">
-                          LandMark
+                          LandMark <span style={style}>*</span>
                         </label>
                         <input
                           type="text"

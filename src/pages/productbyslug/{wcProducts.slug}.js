@@ -19,7 +19,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Layout from "../../Components/Layout";
-import { cartContext } from "../../Components/Store/GlobalContextProvider";
+import { usercontext } from "../../Components/Store/GlobalContextProvider";
+
+const style = {
+  color: "red",
+};
 
 export const query = graphql`
   query ($slug: String) {
@@ -46,6 +50,13 @@ export const query = graphql`
 
 function Shop({ data }) {
   const myproductdet = data.wcProducts;
+  const { isuser, setisuser } = useContext(usercontext);
+  //console.log(isuser);
+  let customerid = 0;
+
+  if (isuser.length === 0) {
+    navigate("/loginpage");
+  }
 
   const [formdata, setformdata] = useState({
     name: "",
@@ -74,13 +85,16 @@ function Shop({ data }) {
     //console.log(data);
     //return false;
 
-    fetch("http://localhost:3000/stripe-payment-integration-gatsby", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
+    fetch(
+      "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration-gatsby",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    )
       .then(function (response) {
         return response.json();
       })
@@ -88,10 +102,50 @@ function Shop({ data }) {
         console.log(data);
 
         if (data && data.status === "succeeded") {
+          api
+            .post("customers", {
+              email: isuser.useremail,
+              first_name: isuser.username,
+              last_name: "",
+              username: isuser.username,
+              billing: {
+                first_name: isuser.username,
+                last_name: "",
+                company: "",
+                address_1: "",
+                address_2: "",
+                city: "",
+                state: "",
+                postcode: "",
+                country: "",
+                email: isuser.email,
+                phone: "",
+              },
+              shipping: {
+                first_name: isuser.username,
+                last_name: "",
+                company: "",
+                address_1: "",
+                address_2: "",
+                city: "",
+                state: "",
+                postcode: "",
+                country: "",
+              },
+            })
+            .then((response) => {
+              console.log(response.data);
+              customerid = response.data.id;
+            })
+            .catch((error) => {
+              console.log(error.response.data);
+            });
+
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
             payment_method_title: data.description,
             set_paid: true,
+            customer_id: 0,
             billing: {
               first_name: data.shipping.name,
               address_1: data.shipping.line1,
@@ -137,10 +191,12 @@ function Shop({ data }) {
               if (response.data && response.data.id > 0) {
                 const data = {
                   status: "completed",
+                  customer_id: customerid,
                 };
                 api
                   .put(`orders/${response.data.id}`, data)
                   .then((response) => {
+                    alert("order placed successfully");
                     //console.log(response.data);
                     //localStorage.setItem("order_id", response.data.id);
                     //navigate(`/CheckoutPage/success`);
@@ -227,7 +283,9 @@ function Shop({ data }) {
                 <HStack>
                   <Box>
                     <FormControl id="fullname">
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>
+                        Full Name <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -239,7 +297,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="email">
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>
+                        Email <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="email"
                         size={"sm"}
@@ -251,7 +311,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="number">
-                      <FormLabel>Number</FormLabel>
+                      <FormLabel>
+                        Number <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -265,7 +327,9 @@ function Shop({ data }) {
                 <HStack>
                   <Box>
                     <FormControl id="city">
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>
+                        City <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -277,7 +341,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="state">
-                      <FormLabel>State</FormLabel>
+                      <FormLabel>
+                        State <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -289,7 +355,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="country">
-                      <FormLabel>country</FormLabel>
+                      <FormLabel>
+                        country <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -303,7 +371,9 @@ function Shop({ data }) {
                 <HStack>
                   <Box>
                     <FormControl id="city">
-                      <FormLabel>ZipCode</FormLabel>
+                      <FormLabel>
+                        ZipCode <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -315,7 +385,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="city">
-                      <FormLabel>H.No./B.No</FormLabel>
+                      <FormLabel>
+                        H.No./B.No <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -327,7 +399,9 @@ function Shop({ data }) {
                   </Box>
                   <Box>
                     <FormControl id="city">
-                      <FormLabel>Area/Colony</FormLabel>
+                      <FormLabel>
+                        Area/Colony <span style={style}>*</span>
+                      </FormLabel>
                       <Input
                         type="text"
                         size={"sm"}
@@ -340,7 +414,9 @@ function Shop({ data }) {
                 </HStack>
                 <HStack>
                   <FormControl id="email">
-                    <FormLabel>Full Address</FormLabel>
+                    <FormLabel>
+                      Full Address <span style={style}>*</span>
+                    </FormLabel>
                     <Textarea
                       placeholder=""
                       size="sm"
