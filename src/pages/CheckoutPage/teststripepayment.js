@@ -18,7 +18,7 @@ function StripeCheckouts() {
   const { cart, setcart } = useContext(cartContext);
   //console.log(cart);
   if (cart.length === 0) {
-    navigate("/");
+    //navigate("/");
   }
   const obj = Object.values(cart);
   const length = cart.length;
@@ -43,7 +43,7 @@ function StripeCheckouts() {
   const { isuser, setisuser } = useContext(usercontext);
   //console.log(isuser);
   if (isuser.length === 0) {
-    navigate("/loginpage");
+    //navigate("/loginpage");
   }
 
   const { order_id, setorder_id } = useContext(orderid);

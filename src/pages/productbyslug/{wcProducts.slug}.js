@@ -55,7 +55,7 @@ function Shop({ data }) {
   let customerid = 0;
 
   if (isuser.length === 0) {
-    navigate("/loginpage");
+    //navigate("/loginpage");
   }
 
   const [formdata, setformdata] = useState({
@@ -196,7 +196,7 @@ function Shop({ data }) {
                 api
                   .put(`orders/${response.data.id}`, data)
                   .then((response) => {
-                    //alert("order placed successfully");
+                    alert("order placed successfully");
                     //console.log(response.data);
                     //localStorage.setItem("order_id", response.data.id);
                     //navigate(`/CheckoutPage/success`);
