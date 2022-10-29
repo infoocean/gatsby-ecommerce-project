@@ -1,9 +1,17 @@
 import React, { useContext } from "react";
 import { Link } from "gatsby";
 import {
+  Avatar,
   Box,
   Button,
+  Center,
   Container,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -75,15 +83,33 @@ function Header() {
 
             {isuser && isuser.userid ? (
               <>
-                <Button
-                  as={"a"}
-                  fontSize={"sm"}
-                  fontWeight={400}
-                  variant={"link"}
-                  href={"#"}
-                >
-                  <Link to="/">Hii, {isuser && isuser.username}</Link>
-                </Button>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                  >
+                    <Avatar
+                      size={"sm"}
+                      src={"https://avatars.dicebear.com/api/male/username.svg"}
+                    />
+                  </MenuButton>
+                  <MenuList alignItems={"left"} p={2}>
+                    <Heading style={{ fontSize: "18px" }}>
+                      Hii, {isuser.username}
+                    </Heading>
+                    <MenuDivider />
+                    <MenuItem>
+                      <Link to="/userprofile">Profile</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="/userorder">Order</Link>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+
                 <Button
                   as={"a"}
                   fontSize={"sm"}

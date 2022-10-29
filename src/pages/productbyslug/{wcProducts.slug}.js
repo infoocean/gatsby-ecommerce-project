@@ -53,6 +53,7 @@ function Shop({ data }) {
   const { isuser, setisuser } = useContext(usercontext);
   //console.log(isuser);
   let customerid = 0;
+  const [paymentstatus, setpaymentstatus] = useState(false);
 
   if (isuser.length === 0) {
     //navigate("/loginpage");
@@ -84,7 +85,7 @@ function Shop({ data }) {
     const data = { token, formdata, ammount: myproductdet.price };
     //console.log(data);
     //return false;
-
+    setpaymentstatus(true);
     fetch(
       "https://mynodeherokuappproject.herokuapp.com/stripe-payment-integration-gatsby",
       {
@@ -102,44 +103,44 @@ function Shop({ data }) {
         console.log(data);
 
         if (data && data.status === "succeeded") {
-          api
-            .post("customers", {
-              email: isuser.useremail,
-              first_name: isuser.username,
-              last_name: "",
-              username: isuser.username,
-              billing: {
-                first_name: isuser.username,
-                last_name: "",
-                company: "",
-                address_1: "",
-                address_2: "",
-                city: "",
-                state: "",
-                postcode: "",
-                country: "",
-                email: isuser.email,
-                phone: "",
-              },
-              shipping: {
-                first_name: isuser.username,
-                last_name: "",
-                company: "",
-                address_1: "",
-                address_2: "",
-                city: "",
-                state: "",
-                postcode: "",
-                country: "",
-              },
-            })
-            .then((response) => {
-              console.log(response.data);
-              customerid = response.data.id;
-            })
-            .catch((error) => {
-              console.log(error.response.data);
-            });
+          // api
+          //   .post("customers", {
+          //     email: isuser.useremail,
+          //     first_name: isuser.username,
+          //     last_name: "",
+          //     username: isuser.username,
+          //     billing: {
+          //       first_name: isuser.username,
+          //       last_name: "",
+          //       company: "",
+          //       address_1: "",
+          //       address_2: "",
+          //       city: "",
+          //       state: "",
+          //       postcode: "",
+          //       country: "",
+          //       email: isuser.email,
+          //       phone: "",
+          //     },
+          //     shipping: {
+          //       first_name: isuser.username,
+          //       last_name: "",
+          //       company: "",
+          //       address_1: "",
+          //       address_2: "",
+          //       city: "",
+          //       state: "",
+          //       postcode: "",
+          //       country: "",
+          //     },
+          //   })
+          //   .then((response) => {
+          //     console.log(response.data);
+          //     customerid = response.data.id;
+          //   })
+          //   .catch((error) => {
+          //     console.log(error.response.data);
+          //   });
 
           const newcreateorder = {
             payment_method: data.payment_method_types[0],
@@ -196,18 +197,44 @@ function Shop({ data }) {
                 api
                   .put(`orders/${response.data.id}`, data)
                   .then((response) => {
-                    alert("order placed successfully");
-                    //console.log(response.data);
-                    //localStorage.setItem("order_id", response.data.id);
-                    //navigate(`/CheckoutPage/success`);
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    var raw = JSON.stringify({
+                      Userid: isuser.userid,
+                      Orderid: response.data.id,
+                    });
+
+                    var requestOptions = {
+                      method: "POST",
+                      headers: myHeaders,
+                      body: raw,
+                    };
+                    fetch("http://localhost:3000/wybritorders", requestOptions)
+                      .then((response) => response.text())
+                      .then((result) => console.log(result))
+                      .catch((error) => console.log("error", error));
+                    alert("Thanks ! Order placed successfully");
+                    setpaymentstatus(false);
+                    setformdata({
+                      name: "",
+                      email: "",
+                      number: "",
+                      city: "",
+                      state: "",
+                      country: "",
+                      zipcode: "",
+                      hnobno: "",
+                      areacolony: "",
+                      address: "",
+                    });
                   })
                   .catch((error) => {
-                    //console.log(error.response.data);
+                    console.log(error);
                   });
               }
             })
             .catch((error) => {
-              //console.log(error.response.data);
+              console.log(error);
             });
         }
       })
@@ -467,6 +494,11 @@ function Shop({ data }) {
                       >
                         Pay With Card Stripe Payment
                       </button>
+                      {paymentstatus === true ? (
+                        <span class="spinner spinner-large spinner-blue spinner-slow"></span>
+                      ) : (
+                        ""
+                      )}
                     </StripeCheckout>
                   </div>
                 </Stack>

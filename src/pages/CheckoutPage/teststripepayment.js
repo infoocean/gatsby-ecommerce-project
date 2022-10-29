@@ -170,6 +170,23 @@ function StripeCheckouts() {
                     //localStorage.setItem("order_id", response.data.id);
                     setpaymentstatus(false);
                     setorder_id(response.data.id);
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    var raw = JSON.stringify({
+                      Userid: isuser.userid,
+                      Orderid: response.data.id,
+                    });
+
+                    var requestOptions = {
+                      method: "POST",
+                      headers: myHeaders,
+                      body: raw,
+                    };
+                    fetch("http://localhost:3000/wybritorders", requestOptions)
+                      .then((response) => response.text())
+                      .then((result) => console.log(result))
+                      .catch((error) => console.log("error", error));
+                    alert("Thanks ! Order placed successfully");
                     setcart([]);
                     navigate(`/CheckoutPage/success`);
                   })
