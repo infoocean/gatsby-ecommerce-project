@@ -182,7 +182,10 @@ function StripeCheckouts() {
                       headers: myHeaders,
                       body: raw,
                     };
-                    fetch("http://localhost:3000/wybritorders", requestOptions)
+                    fetch(
+                      "https://mynodeherokuappproject.herokuapp.com/wybritorders",
+                      requestOptions
+                    )
                       .then((response) => response.text())
                       .then((result) => console.log(result))
                       .catch((error) => console.log("error", error));
