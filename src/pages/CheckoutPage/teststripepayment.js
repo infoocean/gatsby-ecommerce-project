@@ -1,9 +1,24 @@
-import { Checkbox, color } from "@chakra-ui/react";
-import { navigate } from "gatsby";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Spinner,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { Link, navigate, withPrefix } from "gatsby";
 import React, { useContext, useEffect, useState } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import api from "../../API/Woocommerceapi";
 import Layout from "../../Components/Layout";
+import { toast, ToastContainer } from "react-toastify";
 import {
   cartContext,
   orderid,
@@ -15,6 +30,7 @@ const style = {
 };
 
 function StripeCheckouts() {
+  //cart
   const { cart, setcart } = useContext(cartContext);
   //console.log(cart);
   if (cart.length === 0) {
@@ -31,7 +47,6 @@ function StripeCheckouts() {
       total: obj[i].price.toString(),
     });
   }
-
   const [paymentstatus, setpaymentstatus] = useState(false);
   const [totalamt, settotalamt] = useState(0);
   useEffect(() => {
@@ -39,12 +54,81 @@ function StripeCheckouts() {
       cart.reduce((acc, curr) => Number(acc) + Number(curr.price), 0)
     );
   }, []);
-
   const { isuser, setisuser } = useContext(usercontext);
-  //console.log(isuser);
+  // const isBrowser = () => typeof window !== "undefined";
   if (isuser.length === 0) {
-    //navigate("/loginpage");
+    //isBrowser() && window.location.replace("/loginpage");
   }
+  //console.log(isuser);
+  // if (isuser.length === 0) {
+  //   navigate("/loginpage");
+  // }
+  //model
+
+  const [model, setmodel] = useState(true);
+
+  //loginform
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [showsnipper, setshowsnipper] = useState(false);
+  const [err, seterr] = useState("");
+  const showToastLoginSuccessMessage = () => {
+    toast.success("User Login SuccessFully !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
+  function HandlEmail(event) {
+    setemail(event.target.value);
+  }
+  const HandlPassword = (e) => {
+    setpassword(e.target.value);
+  };
+
+  const HandleLoginform = async (e) => {
+    setshowsnipper(true);
+    e.preventDefault();
+    if (email !== "" && password !== "") {
+      let data = JSON.stringify({ email, password });
+      //alert(data);
+      try {
+        const response = await fetch(
+          "https://mynodeherokuappproject.herokuapp.com/wybrituserlogin",
+          {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data,
+          }
+        );
+        const res = await response.json();
+        //console.log(res);
+        if (response.status === 200) {
+          setisuser({
+            userid: res.userinfo._id,
+            username: res.userinfo.firstname,
+            useremail: res.userinfo.email,
+          });
+          seterr("");
+          showToastLoginSuccessMessage();
+          setshowsnipper(false);
+          setTimeout(() => {
+            setmodel(false);
+          }, "2000");
+        } else {
+          seterr("Plese Enter Valid Email  or Password  ");
+          setshowsnipper(false);
+        }
+      } catch (error) {
+        //console.log(error);
+      }
+    } else {
+      seterr("Plese Enter Email** or Password**");
+      setshowsnipper(false);
+    }
+  };
 
   const { order_id, setorder_id } = useContext(orderid);
   const { payreceipt, setpayreceipt } = useContext(receipt);
@@ -487,6 +571,106 @@ function StripeCheckouts() {
           </div>
         </div>
       </div>
+      <div
+        className={
+          "modal fade" +
+          (model && isuser.length === 0 ? " show d-block" : " d-none")
+        }
+        tabIndex="-1"
+        role="dialog"
+        style={{ backgroundColor: "darkslategrey" }}
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">
+                <b>Login Form</b>
+              </h5>
+            </div>
+            <Box
+              rounded={"lg"}
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              p={8}
+            >
+              <Stack spacing={4}>
+                <form>
+                  <FormControl id="email">
+                    <FormLabel>Email address</FormLabel>
+                    <Input
+                      type="email"
+                      name="email"
+                      value={email}
+                      id="email"
+                      onChange={HandlEmail}
+                    />
+                  </FormControl>
+                  <FormControl id="password" mt={5}>
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup>
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        id="password"
+                        value={password}
+                        onChange={HandlPassword}
+                      />
+                      <InputRightElement h={"full"}>
+                        <Button
+                          variant={"ghost"}
+                          onClick={() =>
+                            setShowPassword((showPassword) => !showPassword)
+                          }
+                        >
+                          {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                        </Button>
+                      </InputRightElement>
+                    </InputGroup>
+                  </FormControl>
+                  <Text mt={1} mb={1} style={{ color: "red" }}>
+                    {err}
+                  </Text>
+                  <Stack spacing={7} mt={3}>
+                    <Button
+                      type="submit"
+                      name="submit"
+                      bg={"blue.400"}
+                      color={"white"}
+                      _hover={{
+                        bg: "blue.500",
+                      }}
+                      disabled={showsnipper === true ? true : false}
+                      onClick={HandleLoginform}
+                    >
+                      Log in
+                      {showsnipper === true ? (
+                        <Spinner
+                          color="white.500"
+                          size="sm"
+                          style={{ marginLeft: "10px" }}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </Button>
+                  </Stack>
+                </form>
+                <Stack pt={1}>
+                  <Text align={"center"}>
+                    New user?{" "}
+                    <Link to="/registrationpage">
+                      <Text as={"span"} color={"blue.400"}>
+                        Signup
+                      </Text>
+                    </Link>
+                  </Text>
+                </Stack>
+              </Stack>
+            </Box>
+          </div>
+        </div>
+      </div>
+      <ToastContainer />
     </>
   );
 }
