@@ -59,9 +59,9 @@ function Header() {
           </Link>
           <Stack direction={"row"} spacing={6}>
             <Link to="/shop">Shop</Link>
-            <Link to="/shop">Live Demo</Link>
-            <Link to="/shop">Components</Link>
-            <Link to="/shop">Documentation</Link>
+            <Link to="/livedemo">Live Demo</Link>
+            <Link to="/">Components</Link>
+            <Link to="/">Documentation</Link>
           </Stack>
           <Stack
             flex={{ base: 1, md: 0 }}

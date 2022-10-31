@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
 import {
   Box,
+  Button,
   Center,
   Container,
   Heading,
@@ -8,10 +8,13 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { graphql, Link, useStaticQuery } from "gatsby";
-import { cartContext } from "../Store/GlobalContextProvider";
+import React from "react";
+import { useContext } from "react";
+import Layout from "../Components/Layout";
+import { cartContext } from "../Components/Store/GlobalContextProvider";
+
 const query = graphql`
   {
     allWcProducts {
@@ -36,12 +39,14 @@ const query = graphql`
     }
   }
 `;
-function BestsellerProducts() {
+
+function Livedemo() {
   const data = useStaticQuery(query);
   const mydata = data.allWcProducts.nodes;
   const { cart, setcart } = useContext(cartContext);
   return (
     <>
+      <Layout />
       <Box>
         <Container maxW={"7xl"} py={5} as={Stack}>
           <Stack spacing={0} align={"center"}>
@@ -53,7 +58,7 @@ function BestsellerProducts() {
               const { name, images, price, description, slug, categories, id } =
                 item;
               return (
-                <Box key={key}>
+                <Box>
                   <Center py={2}>
                     <Box
                       maxW={"445px"}
@@ -97,17 +102,12 @@ function BestsellerProducts() {
                         ) : (
                           ""
                         )}
-
-                        {price ? (
-                          <Button
-                            colorScheme="orange"
-                            onClick={() => setcart([...cart, item])}
-                          >
-                            add to cart
-                          </Button>
-                        ) : (
-                          <Button colorScheme="orange">add to cart</Button>
-                        )}
+                        <Button
+                          colorScheme="orange"
+                          onClick={() => setcart([...cart, item])}
+                        >
+                          add to cart
+                        </Button>
                       </Stack>
                     </Box>
                   </Center>
@@ -120,4 +120,5 @@ function BestsellerProducts() {
     </>
   );
 }
-export default BestsellerProducts;
+
+export default Livedemo;

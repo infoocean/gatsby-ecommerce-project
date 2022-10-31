@@ -5,6 +5,8 @@ import { Link } from "gatsby";
 import Layout from "../../Components/Layout";
 import { cartContext } from "../../Components/Store/GlobalContextProvider";
 
+import { MdDelete } from "react-icons/md";
+
 function Cart() {
   const { cart, setcart } = useContext(cartContext);
   //console.log(cart);
@@ -13,7 +15,13 @@ function Cart() {
     settotalamt(
       cart.reduce((acc, curr) => Number(acc) + Number(curr.price), 0)
     );
-  }, []);
+  }, [cart]);
+
+  const cardproductdelete = (p_id) => {
+    //alert(p_id);
+    const newcart = cart.filter((cart) => cart.id !== p_id);
+    setcart(newcart);
+  };
 
   return (
     <>
@@ -38,6 +46,9 @@ function Cart() {
                     <th style={{ width: "8%" }}>Quantity</th>
                     <th style={{ width: "22%" }} class="text-center">
                       Subtotal
+                    </th>
+                    <th style={{ width: "22%" }} class="text-center">
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -66,6 +77,14 @@ function Cart() {
                         <td data-th="Quantity">1</td>
                         <td data-th="Subtotal" class="text-center">
                           {item.price}
+                        </td>
+                        <td data-th="Subtotal" class="text-center">
+                          <button
+                            onClick={() => cardproductdelete(item.id)}
+                            style={{ fontSize: "20px" }}
+                          >
+                            <MdDelete />
+                          </button>
                         </td>
                       </tr>
                     );
