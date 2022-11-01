@@ -40,6 +40,11 @@ function BestsellerProducts() {
   const data = useStaticQuery(query);
   const mydata = data.allWcProducts.nodes;
   const { cart, setcart } = useContext(cartContext);
+  const catids = [];
+  cart.map((cartitem, key) => {
+    catids.push(cartitem.id);
+  });
+
   return (
     <>
       <Box>
@@ -98,15 +103,36 @@ function BestsellerProducts() {
                           ""
                         )}
 
-                        {price ? (
+                        {catids.includes(id) ? (
                           <Button
                             colorScheme="orange"
-                            onClick={() => setcart([...cart, item])}
+                            onClick={() =>
+                              setcart(
+                                cart.filter((cartval) => cartval.id !== id)
+                              )
+                            }
                           >
-                            add to cart
+                            Remove from cart
                           </Button>
                         ) : (
-                          <Button colorScheme="orange">add to cart</Button>
+                          <div>
+                            {price ? (
+                              <Button
+                                style={{ width: "100%" }}
+                                colorScheme="orange"
+                                onClick={() => setcart([...cart, item])}
+                              >
+                                add to cart
+                              </Button>
+                            ) : (
+                              <Button
+                                style={{ width: "100%" }}
+                                colorScheme="orange"
+                              >
+                                add to cart
+                              </Button>
+                            )}
+                          </div>
                         )}
                       </Stack>
                     </Box>

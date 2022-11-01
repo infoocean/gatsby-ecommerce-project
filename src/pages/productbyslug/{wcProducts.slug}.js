@@ -474,8 +474,8 @@ function Shop({ data }) {
                       name={"Securly Payment"}
                       description="Big Data Stuff"
                       image="https://cdn-icons-png.flaticon.com/512/1803/1803612.png"
-                      amount="$100"
-                      currency="USD"
+                      amount={myproductdet.price * 100}
+                      currency="INR"
                       stripeKey="pk_test_51LkLlPLVp3cdDpUhtxguCYbzDREYzfHgo6NCCvHrthwF5ioDMsI1tf9dwC0uTW1xwS17g4LtTOLO0HMU2NviNvY200so7jejAV"
                       locale="India"
                       token={onToken}

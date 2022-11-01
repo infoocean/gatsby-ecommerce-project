@@ -44,6 +44,13 @@ function Livedemo() {
   const data = useStaticQuery(query);
   const mydata = data.allWcProducts.nodes;
   const { cart, setcart } = useContext(cartContext);
+  //console.log(cart);
+  const cart_product_ids = [];
+  cart.map((cartitem, key) => {
+    //console.log(cartitem.id);
+    cart_product_ids.push(cartitem.id);
+  });
+
   return (
     <>
       <Layout />
@@ -102,12 +109,36 @@ function Livedemo() {
                         ) : (
                           ""
                         )}
-                        <Button
-                          colorScheme="orange"
-                          onClick={() => setcart([...cart, item])}
-                        >
-                          add to cart
-                        </Button>
+
+                        {cart_product_ids.includes(id) ? (
+                          <Link to="/cart/productcartdet">
+                            <Button
+                              colorScheme="orange"
+                              style={{ width: "100%" }}
+                            >
+                              Go to cart
+                            </Button>
+                          </Link>
+                        ) : (
+                          <div>
+                            {price ? (
+                              <Button
+                                style={{ width: "100%" }}
+                                colorScheme="orange"
+                                onClick={() => setcart([...cart, item])}
+                              >
+                                Add to cart
+                              </Button>
+                            ) : (
+                              <Button
+                                style={{ width: "100%" }}
+                                colorScheme="orange"
+                              >
+                                Add to cart
+                              </Button>
+                            )}
+                          </div>
+                        )}
                       </Stack>
                     </Box>
                   </Center>
