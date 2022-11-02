@@ -13,6 +13,8 @@ import {
 import slugify from "slugify";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { cartContext } from "../Store/GlobalContextProvider";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const query = graphql`
   {
     allWcProducts {
@@ -36,12 +38,30 @@ function Shopcomp() {
   const data = useStaticQuery(query);
   const mydata = data.allWcProducts.nodes;
   const { cart, setcart } = useContext(cartContext);
+
+  let cart_ids = [];
+  cart.map((item) => {
+    cart_ids.push(item.id);
+  });
+
+  const showaddtocartSuccessMessage = () => {
+    toast.success("item added to cart", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  function addtocart(item) {
+    setcart([...cart, item]);
+    showaddtocartSuccessMessage();
+  }
+
   return (
     <>
       <Container maxW={"7xl"} mt={8} mb={8}>
         <SimpleGrid columns={[1, null, 3]} spacing="40px">
           {mydata.slice(0, 8).map((item, key) => {
-            const { name, images, price, description, categories, slug } = item;
+            const { name, images, price, description, categories, slug, id } =
+              item;
             const slugTitle = slugify(slug, { lower: true });
             return (
               <Box>
@@ -88,15 +108,35 @@ function Shopcomp() {
                       ) : (
                         ""
                       )}
-                      {price ? (
-                        <Button
-                          colorScheme="orange"
-                          onClick={() => setcart([...cart, item])}
-                        >
-                          add to cart
-                        </Button>
+
+                      {!cart_ids.includes(id) ? (
+                        <div>
+                          {price ? (
+                            <Button
+                              style={{ width: "100%" }}
+                              colorScheme="orange"
+                              onClick={() => addtocart(item)}
+                            >
+                              add to cart
+                            </Button>
+                          ) : (
+                            <Button
+                              style={{ width: "100%" }}
+                              colorScheme="orange"
+                            >
+                              add to cart
+                            </Button>
+                          )}
+                        </div>
                       ) : (
-                        <Button colorScheme="orange">add to cart</Button>
+                        <Link to="/cart/productcartdet">
+                          <Button
+                            style={{ width: "100%" }}
+                            colorScheme="orange"
+                          >
+                            go to cart
+                          </Button>
+                        </Link>
                       )}
                     </Stack>
                   </Box>
@@ -106,6 +146,7 @@ function Shopcomp() {
           })}
         </SimpleGrid>
       </Container>
+      <ToastContainer />
     </>
   );
 }

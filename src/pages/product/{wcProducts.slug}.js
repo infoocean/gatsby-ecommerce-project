@@ -269,6 +269,12 @@ function Shop({ data }) {
   const { cart, setcart } = useContext(cartContext);
   //console.log(cart);
 
+  const cartids = [];
+  cart.map((cartitem, key) => {
+    //console.log(cartitem.id);
+    cartids.push(cartitem.id);
+  });
+
   let mytrouserdata = [];
   function handltrouser(e) {
     //alert(e.target.value);
@@ -316,25 +322,43 @@ function Shop({ data }) {
 
             <Text>{myproductdet.name}</Text>
             <Stack spacing={6} direction={"row"}>
-              {myproductdet.price ? (
+              {cartids.includes(myproductdet.id) ? (
                 <Button
                   px={6}
                   colorScheme={"orange"}
                   bg={"blue.400"}
                   _hover={{ bg: "orange.500" }}
-                  onClick={() => setcart([...cart, myproductdet])}
+                  onClick={() => {
+                    setcart(
+                      cart.filter((cartitm) => cartitm.id !== myproductdet.id)
+                    );
+                  }}
                 >
-                  Add To Cart
+                  Remove from Cart
                 </Button>
               ) : (
-                <Button
-                  px={6}
-                  colorScheme={"orange"}
-                  bg={"blue.400"}
-                  _hover={{ bg: "orange.500" }}
-                >
-                  Add To Cart
-                </Button>
+                <div>
+                  {myproductdet.price ? (
+                    <Button
+                      px={6}
+                      colorScheme={"orange"}
+                      bg={"blue.400"}
+                      _hover={{ bg: "orange.500" }}
+                      onClick={() => setcart([...cart, myproductdet])}
+                    >
+                      Add To Cart
+                    </Button>
+                  ) : (
+                    <Button
+                      px={6}
+                      colorScheme={"orange"}
+                      bg={"blue.400"}
+                      _hover={{ bg: "orange.500" }}
+                    >
+                      Add To Cart
+                    </Button>
+                  )}
+                </div>
               )}
 
               {myproductdet.price ? (

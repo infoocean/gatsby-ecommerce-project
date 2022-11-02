@@ -12,6 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import { cartContext } from "../Store/GlobalContextProvider";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const query = graphql`
   {
     allWcProducts {
@@ -44,6 +46,27 @@ function BestsellerProducts() {
   cart.map((cartitem, key) => {
     catids.push(cartitem.id);
   });
+
+  const showaddtocartSuccessMessage = () => {
+    toast.success("item added to cart", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+  const showremovecartSuccessMessage = () => {
+    toast.success("item remove from cart", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  function adtocart(item) {
+    setcart([...cart, item]);
+    showaddtocartSuccessMessage();
+  }
+
+  function removefromcart(id) {
+    setcart(cart.filter((cartval) => cartval.id !== id));
+    showremovecartSuccessMessage();
+  }
 
   return (
     <>
@@ -106,11 +129,7 @@ function BestsellerProducts() {
                         {catids.includes(id) ? (
                           <Button
                             colorScheme="orange"
-                            onClick={() =>
-                              setcart(
-                                cart.filter((cartval) => cartval.id !== id)
-                              )
-                            }
+                            onClick={() => removefromcart(id)}
                           >
                             Remove from cart
                           </Button>
@@ -120,7 +139,7 @@ function BestsellerProducts() {
                               <Button
                                 style={{ width: "100%" }}
                                 colorScheme="orange"
-                                onClick={() => setcart([...cart, item])}
+                                onClick={() => adtocart(item)}
                               >
                                 add to cart
                               </Button>
@@ -143,6 +162,7 @@ function BestsellerProducts() {
           </SimpleGrid>
         </Container>
       </Box>
+      <ToastContainer />
     </>
   );
 }
